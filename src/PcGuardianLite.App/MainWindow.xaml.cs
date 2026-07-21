@@ -18,6 +18,10 @@ namespace PcGuardianLite.App;
 
 public partial class MainWindow : Window
 {
+    private const double CollapsedWindowWidth = 160;
+    private const double CollapsedWindowHeight = 140;
+    private const double ExpandedWindowWidth = 920;
+    private const double ExpandedWindowHeight = 820;
     private readonly SystemMonitorService monitorService = new(new WindowsMetricProvider());
     private readonly SafeCleanupService cleanupService = new();
     private readonly ObservableCollection<CleanupTargetViewModel> cleanupItems = new();
@@ -50,8 +54,10 @@ public partial class MainWindow : Window
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        Width = CollapsedWindowWidth;
+        Height = CollapsedWindowHeight;
         Left = SystemParameters.WorkArea.Right - Width - 24;
-        Top = SystemParameters.WorkArea.Bottom - 128;
+        Top = Math.Max(SystemParameters.WorkArea.Top + 24, SystemParameters.WorkArea.Bottom - Height - 24);
         RefreshSnapshot();
     }
 
@@ -135,32 +141,140 @@ public partial class MainWindow : Window
     {
         if (DetailPanel.Visibility == Visibility.Visible)
         {
-            DetailPanel.Visibility = Visibility.Collapsed;
+            AnimatePanelClose();
             return;
         }
 
+        ExpandWindowForPanel();
         DetailPanel.Visibility = Visibility.Visible;
+        KeepPanelInsideWorkArea();
         AnimatePanelOpen();
+    }
+
+    private void ExpandWindowForPanel()
+    {
+        var ballRight = Left + Width;
+        var ballTop = Top;
+
+        Width = ExpandedWindowWidth;
+        Height = ExpandedWindowHeight;
+        Left = ballRight - Width;
+        Top = ballTop;
+    }
+
+    private void CollapseWindowToBall()
+    {
+        var ballRight = Left + Width;
+        var ballTop = Top;
+
+        Width = CollapsedWindowWidth;
+        Height = CollapsedWindowHeight;
+        Left = ballRight - Width;
+        Top = ballTop;
+        KeepCollapsedWindowInsideWorkArea();
     }
 
     private void AnimatePanelOpen()
     {
         DetailPanel.Opacity = 0;
-        PanelEntranceTransform.Y = -14;
+        PanelEntranceTransform.Y = -10;
 
         DetailPanel.BeginAnimation(
             OpacityProperty,
-            new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220))
+            new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(180))
             {
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             });
 
         PanelEntranceTransform.BeginAnimation(
             TranslateTransform.YProperty,
-            new DoubleAnimation(-14, 0, TimeSpan.FromMilliseconds(260))
+            new DoubleAnimation(-10, 0, TimeSpan.FromMilliseconds(220))
             {
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             });
+    }
+
+    private void AnimatePanelClose()
+    {
+        DetailPanel.BeginAnimation(
+            OpacityProperty,
+            new DoubleAnimation(DetailPanel.Opacity, 0, TimeSpan.FromMilliseconds(140))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+            });
+
+        PanelEntranceTransform.BeginAnimation(
+            TranslateTransform.YProperty,
+            new DoubleAnimation(0, -8, TimeSpan.FromMilliseconds(140))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+            });
+
+        var closeTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(145)
+        };
+        closeTimer.Tick += (_, _) =>
+        {
+            closeTimer.Stop();
+            DetailPanel.Visibility = Visibility.Collapsed;
+            DetailPanel.Opacity = 1;
+            PanelEntranceTransform.Y = 0;
+            CollapseWindowToBall();
+        };
+        closeTimer.Start();
+    }
+
+    private void KeepPanelInsideWorkArea()
+    {
+        var workArea = SystemParameters.WorkArea;
+        var desiredRight = Left + Width;
+        var desiredBottom = Top + Height;
+
+        if (desiredRight > workArea.Right)
+        {
+            Left = Math.Max(workArea.Left, workArea.Right - Width - 8);
+        }
+
+        if (desiredBottom > workArea.Bottom)
+        {
+            Top = Math.Max(workArea.Top + 8, workArea.Bottom - Height - 8);
+        }
+
+        if (Left < workArea.Left)
+        {
+            Left = workArea.Left + 8;
+        }
+
+        if (Top < workArea.Top)
+        {
+            Top = workArea.Top + 8;
+        }
+    }
+
+    private void KeepCollapsedWindowInsideWorkArea()
+    {
+        var workArea = SystemParameters.WorkArea;
+
+        if (Left + Width > workArea.Right)
+        {
+            Left = workArea.Right - Width - 8;
+        }
+
+        if (Top + Height > workArea.Bottom)
+        {
+            Top = workArea.Bottom - Height - 8;
+        }
+
+        if (Left < workArea.Left)
+        {
+            Left = workArea.Left + 8;
+        }
+
+        if (Top < workArea.Top)
+        {
+            Top = workArea.Top + 8;
+        }
     }
 
     private void FloatingBallContextMenu_Opened(object sender, RoutedEventArgs e)
@@ -237,7 +351,10 @@ public partial class MainWindow : Window
 
     private void ClosePanel_Click(object sender, RoutedEventArgs e)
     {
-        DetailPanel.Visibility = Visibility.Collapsed;
+        if (DetailPanel.Visibility == Visibility.Visible)
+        {
+            AnimatePanelClose();
+        }
     }
 
     private void RunPcReport_Click(object sender, RoutedEventArgs e)
@@ -438,7 +555,7 @@ public partial class MainWindow : Window
         var uploadBytes = ParseSpeed(snapshot.UploadText);
         var healthScore = HealthScoreCalculator.Calculate(cpu, memory, disk, downloadBytes, uploadBytes);
 
-        HealthScoreText.Text = $"健康分 {healthScore}";
+        HealthScoreText.Text = healthScore.ToString();
         AnimateHealthScoreBrush(healthScore);
         DiskWarningText.Text = disk >= 90
             ? "磁盘剩余空间低于 10%，建议尽快整理"
@@ -596,6 +713,8 @@ public partial class MainWindow : Window
     private void HideToTray()
     {
         DetailPanel.Visibility = Visibility.Collapsed;
+        DetailPanel.Opacity = 1;
+        CollapseWindowToBall();
         Hide();
     }
 

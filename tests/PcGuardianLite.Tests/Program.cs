@@ -48,7 +48,8 @@ var tests = new List<(string Name, Action Run)>
     ("Safe cleanup ignores inaccessible empty-directory cleanup roots", TestSafeCleanupIgnoresInaccessibleEmptyDirectoryCleanupRoots),
     ("Main window uses cyber HUD skin resources", TestMainWindowUsesCyberHudSkinResources),
     ("Main window uses tabbed tool layout", TestMainWindowUsesTabbedToolLayout),
-    ("Main window uses tactical anime motion skin", TestMainWindowUsesTacticalAnimeMotionSkin)
+    ("Main window uses tactical anime motion skin", TestMainWindowUsesTacticalAnimeMotionSkin),
+    ("Main window uses premium instrument shell", TestMainWindowUsesPremiumInstrumentShell)
 };
 
 var failed = 0;
@@ -490,8 +491,7 @@ static void TestSafeCleanupIgnoresInaccessibleEmptyDirectoryCleanupRoots()
 static void TestMainWindowUsesCyberHudSkinResources()
 {
     var sourceRoot = FindSourceRoot();
-    var xamlPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml");
-    var xaml = File.ReadAllText(xamlPath);
+    var xaml = ReadUiSourceText(sourceRoot);
 
     AssertContains("CyberPanelBrush", xaml);
     AssertContains("CyberMetricCardStyle", xaml);
@@ -503,8 +503,7 @@ static void TestMainWindowUsesCyberHudSkinResources()
 static void TestMainWindowUsesTabbedToolLayout()
 {
     var sourceRoot = FindSourceRoot();
-    var xamlPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml");
-    var xaml = File.ReadAllText(xamlPath);
+    var xaml = ReadUiSourceText(sourceRoot);
 
     AssertContains("CyberTabControlStyle", xaml);
     AssertContains("Header=\"总览\"", xaml);
@@ -517,9 +516,8 @@ static void TestMainWindowUsesTabbedToolLayout()
 static void TestMainWindowUsesTacticalAnimeMotionSkin()
 {
     var sourceRoot = FindSourceRoot();
-    var xamlPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml");
     var codePath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml.cs");
-    var xaml = File.ReadAllText(xamlPath);
+    var xaml = ReadUiSourceText(sourceRoot);
     var code = File.ReadAllText(codePath);
 
     AssertContains("TacticalAnimePanelBrush", xaml);
@@ -530,6 +528,31 @@ static void TestMainWindowUsesTacticalAnimeMotionSkin()
     AssertContains("AnimatePanelOpen", code);
     AssertContains("SetCleanupActivity", code);
     AssertContains("AnimateHealthScoreBrush", code);
+}
+
+static void TestMainWindowUsesPremiumInstrumentShell()
+{
+    var sourceRoot = FindSourceRoot();
+    var xamlPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml");
+    var appPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "App.xaml");
+    var themePath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "Styles", "PremiumTheme.xaml");
+    var codePath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml.cs");
+    var xaml = File.ReadAllText(xamlPath);
+    var app = File.ReadAllText(appPath);
+    var code = File.ReadAllText(codePath);
+
+    AssertEqual(true, File.Exists(themePath));
+    var theme = File.ReadAllText(themePath);
+    AssertContains("Styles/PremiumTheme.xaml", app);
+    AssertContains("PremiumShellGrid", xaml);
+    AssertContains("PremiumNavigationTabControlStyle", theme);
+    AssertContains("PremiumMetricCardStyle", theme);
+    AssertContains("PremiumFloatingBallStyle", theme);
+    AssertContains("PremiumStatusPillStyle", theme);
+    AssertContains("PremiumScrollbarStyle", theme);
+    AssertContains("MetricGrid", xaml);
+    AssertContains("AnimatePanelClose", code);
+    AssertContains("KeepPanelInsideWorkArea", code);
 }
 
 static string FindSourceRoot()
@@ -547,6 +570,19 @@ static string FindSourceRoot()
     }
 
     throw new DirectoryNotFoundException("Could not locate PcGuardianLite.sln from the test output directory.");
+}
+
+static string ReadUiSourceText(string sourceRoot)
+{
+    var xamlPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml");
+    var appPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "App.xaml");
+    var themePath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "Styles", "PremiumTheme.xaml");
+
+    return File.ReadAllText(xamlPath) +
+        Environment.NewLine +
+        File.ReadAllText(appPath) +
+        Environment.NewLine +
+        (File.Exists(themePath) ? File.ReadAllText(themePath) : string.Empty);
 }
 
 static void AssertEqual<T>(T expected, T actual)
