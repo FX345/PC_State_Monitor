@@ -47,7 +47,8 @@ var tests = new List<(string Name, Action Run)>
     ("Safe cleanup deletes only selected white-listed files", TestSafeCleanupDeletesOnlySelectedWhitelistedFiles),
     ("Safe cleanup ignores inaccessible empty-directory cleanup roots", TestSafeCleanupIgnoresInaccessibleEmptyDirectoryCleanupRoots),
     ("Main window uses cyber HUD skin resources", TestMainWindowUsesCyberHudSkinResources),
-    ("Main window uses tabbed tool layout", TestMainWindowUsesTabbedToolLayout)
+    ("Main window uses tabbed tool layout", TestMainWindowUsesTabbedToolLayout),
+    ("Main window uses tactical anime motion skin", TestMainWindowUsesTacticalAnimeMotionSkin)
 };
 
 var failed = 0;
@@ -511,6 +512,24 @@ static void TestMainWindowUsesTabbedToolLayout()
     AssertContains("Header=\"网络\"", xaml);
     AssertContains("Header=\"进程\"", xaml);
     AssertContains("Header=\"报告\"", xaml);
+}
+
+static void TestMainWindowUsesTacticalAnimeMotionSkin()
+{
+    var sourceRoot = FindSourceRoot();
+    var xamlPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml");
+    var codePath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml.cs");
+    var xaml = File.ReadAllText(xamlPath);
+    var code = File.ReadAllText(codePath);
+
+    AssertContains("TacticalAnimePanelBrush", xaml);
+    AssertContains("TacticalScrollBarStyle", xaml);
+    AssertContains("PanelEntranceTransform", xaml);
+    AssertContains("CleanupActivityBar", xaml);
+    AssertContains("TabSelectionRail", xaml);
+    AssertContains("AnimatePanelOpen", code);
+    AssertContains("SetCleanupActivity", code);
+    AssertContains("AnimateHealthScoreBrush", code);
 }
 
 static string FindSourceRoot()

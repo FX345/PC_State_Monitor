@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using PcGuardianLite.Core;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
@@ -132,9 +133,34 @@ public partial class MainWindow : Window
 
     private void TogglePanel()
     {
-        DetailPanel.Visibility = DetailPanel.Visibility == Visibility.Visible
-            ? Visibility.Collapsed
-            : Visibility.Visible;
+        if (DetailPanel.Visibility == Visibility.Visible)
+        {
+            DetailPanel.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        DetailPanel.Visibility = Visibility.Visible;
+        AnimatePanelOpen();
+    }
+
+    private void AnimatePanelOpen()
+    {
+        DetailPanel.Opacity = 0;
+        PanelEntranceTransform.Y = -14;
+
+        DetailPanel.BeginAnimation(
+            OpacityProperty,
+            new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            });
+
+        PanelEntranceTransform.BeginAnimation(
+            TranslateTransform.YProperty,
+            new DoubleAnimation(-14, 0, TimeSpan.FromMilliseconds(260))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            });
     }
 
     private void FloatingBallContextMenu_Opened(object sender, RoutedEventArgs e)
@@ -245,12 +271,17 @@ public partial class MainWindow : Window
     {
         try
         {
+            SetCleanupActivity(true);
             await RefreshCleanupScanAsync();
         }
         catch (Exception ex)
         {
             CleanupSummaryText.Text = $"扫描失败：{ex.Message}";
             StatusText.Text = CleanupSummaryText.Text;
+        }
+        finally
+        {
+            SetCleanupActivity(false);
         }
     }
 
@@ -316,6 +347,7 @@ public partial class MainWindow : Window
             }
 
             CleanupSummaryText.Text = "正在清理选中项...";
+            SetCleanupActivity(true);
             var result = await Task.Run(() => cleanupService.Clean(selectedTargets));
 
             var completionText = $"清理完成：删除 {result.DeletedCount} 项，释放 {FormatSize(result.FreedBytes)}，跳过 {result.SkippedCount} 项。";
@@ -328,6 +360,15 @@ public partial class MainWindow : Window
             CleanupSummaryText.Text = $"清理失败：{ex.Message}";
             StatusText.Text = CleanupSummaryText.Text;
         }
+        finally
+        {
+            SetCleanupActivity(false);
+        }
+    }
+
+    private void SetCleanupActivity(bool isActive)
+    {
+        CleanupActivityBar.Visibility = isActive ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void Exit_Click(object sender, RoutedEventArgs e)
@@ -398,6 +439,7 @@ public partial class MainWindow : Window
         var healthScore = HealthScoreCalculator.Calculate(cpu, memory, disk, downloadBytes, uploadBytes);
 
         HealthScoreText.Text = $"健康分 {healthScore}";
+        AnimateHealthScoreBrush(healthScore);
         DiskWarningText.Text = disk >= 90
             ? "磁盘剩余空间低于 10%，建议尽快整理"
             : "磁盘空间正常";
@@ -405,6 +447,28 @@ public partial class MainWindow : Window
             ? System.Windows.Media.Brushes.Firebrick
             : System.Windows.Media.Brushes.SlateGray;
         HealthReasonText.Text = BuildHealthReason(cpu, memory, disk, downloadBytes + uploadBytes);
+    }
+
+    private void AnimateHealthScoreBrush(int healthScore)
+    {
+        var targetColor = healthScore >= 80
+            ? System.Windows.Media.Color.FromRgb(0x2D, 0xE2, 0xFF)
+            : healthScore >= 60
+                ? System.Windows.Media.Color.FromRgb(0xFF, 0x9F, 0x1C)
+                : System.Windows.Media.Color.FromRgb(0xEF, 0x44, 0x44);
+
+        if (HealthScoreText.Foreground is not SolidColorBrush brush || brush.IsFrozen)
+        {
+            brush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xF6, 0xF7, 0xF2));
+            HealthScoreText.Foreground = brush;
+        }
+
+        brush.BeginAnimation(
+            SolidColorBrush.ColorProperty,
+            new ColorAnimation(targetColor, TimeSpan.FromMilliseconds(520))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            });
     }
 
     private void RefreshDiagnostics()
