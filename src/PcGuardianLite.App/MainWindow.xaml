@@ -150,6 +150,49 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Margin" Value="0,0,14,6" />
         </Style>
+
+        <Style x:Key="CyberTabControlStyle" TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style x:Key="CyberTabItemStyle" TargetType="TabItem">
+            <Setter Property="Foreground" Value="{StaticResource CyberTextSecondaryBrush}" />
+            <Setter Property="Background" Value="#66101A34" />
+            <Setter Property="BorderBrush" Value="#3659D4" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="11,6" />
+            <Setter Property="Margin" Value="0,0,6,8" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="TabBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter ContentSource="Header"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource CyberTextPrimaryBrush}" />
+                                <Setter TargetName="TabBorder" Property="Background" Value="#AA173071" />
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="#2DE2FF" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="#C084FC" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -269,6 +312,12 @@
                                        Foreground="{StaticResource CyberTextSecondaryBrush}"
                                        FontSize="10"
                                        Margin="1,2,0,0" />
+                            <TextBlock x:Name="StatusText"
+                                       Text="就绪"
+                                       Foreground="{StaticResource CyberTextSecondaryBrush}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="1,6,10,0" />
                         </StackPanel>
                         <Button Grid.Column="1"
                                 Content="×"
@@ -280,228 +329,288 @@
                                 Click="ClosePanel_Click" />
                     </Grid>
 
-                    <ScrollViewer Grid.Row="1"
-                                  Margin="0,14,0,0"
-                                  VerticalScrollBarVisibility="Auto"
-                                  HorizontalScrollBarVisibility="Disabled">
-                        <StackPanel>
-                            <DockPanel Margin="0,0,0,10">
-                                <TextBlock Text="◆ 电脑状态"
-                                           Style="{StaticResource CyberSectionTitleStyle}"
-                                           DockPanel.Dock="Left" />
-                                <TextBlock x:Name="StatusText"
-                                           Text="就绪"
-                                           Foreground="{StaticResource CyberTextSecondaryBrush}"
-                                           FontSize="12"
-                                           TextWrapping="Wrap"
-                                           HorizontalAlignment="Right" />
-                            </DockPanel>
-
-                            <Grid Margin="0,0,0,2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CyberMetricCardStyle}">
-                                    <StackPanel>
-                                        <TextBlock Text="CPU" Style="{StaticResource CyberMetricLabelStyle}" />
-                                        <TextBlock x:Name="CpuText" Text="--" Style="{StaticResource CyberMetricValueStyle}" />
-                                        <ProgressBar Height="5" Value="45" Maximum="100" Margin="0,10,0,0" Foreground="#2DE2FF" Background="#263D73" />
-                                    </StackPanel>
-                                </Border>
-                                <Border Grid.Row="0" Grid.Column="1" Margin="0,0,0,10" Style="{StaticResource CyberMetricCardStyle}">
-                                    <StackPanel>
-                                        <TextBlock Text="内存" Style="{StaticResource CyberMetricLabelStyle}" />
-                                        <TextBlock x:Name="MemoryText" Text="--" Style="{StaticResource CyberMetricValueStyle}" />
-                                        <ProgressBar Height="5" Value="62" Maximum="100" Margin="0,10,0,0" Foreground="#C084FC" Background="#263D73" />
-                                    </StackPanel>
-                                </Border>
-                                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CyberMetricCardStyle}">
-                                    <StackPanel>
-                                        <TextBlock Text="下载" Style="{StaticResource CyberMetricLabelStyle}" />
-                                        <TextBlock x:Name="DownloadText" Text="--" Foreground="#38BDF8" FontSize="19" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
-                                        <TextBlock Text="当前速度" Foreground="#668AB6F9" FontSize="11" Margin="0,6,0,0" />
-                                    </StackPanel>
-                                </Border>
-                                <Border Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" Style="{StaticResource CyberMetricCardStyle}">
-                                    <StackPanel>
-                                        <TextBlock Text="上传" Style="{StaticResource CyberMetricLabelStyle}" />
-                                        <TextBlock x:Name="UploadText" Text="--" Foreground="#E879F9" FontSize="19" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
-                                        <TextBlock Text="当前速度" Foreground="#668AB6F9" FontSize="11" Margin="0,6,0,0" />
-                                    </StackPanel>
-                                </Border>
-                                <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource CyberMetricCardStyle}">
-                                    <StackPanel>
-                                        <TextBlock Text="磁盘" Style="{StaticResource CyberMetricLabelStyle}" />
-                                        <TextBlock x:Name="DiskText" Text="--" Foreground="{StaticResource CyberTextPrimaryBrush}" FontSize="19" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
-                                        <ProgressBar Height="5" Value="70" Maximum="100" Margin="0,10,0,0" Foreground="#60A5FA" Background="#263D73" />
-                                    </StackPanel>
-                                </Border>
-                                <Border Grid.Row="2" Grid.Column="1" Margin="0,0,0,10" Style="{StaticResource CyberMetricCardStyle}">
-                                    <StackPanel>
-                                        <TextBlock Text="温度" Style="{StaticResource CyberMetricLabelStyle}" />
-                                        <TextBlock x:Name="TemperatureText" Text="--" Foreground="{StaticResource CyberTextPrimaryBrush}" FontSize="18" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
-                                        <TextBlock Text="传感器状态" Foreground="#668AB6F9" FontSize="11" Margin="0,6,0,0" />
-                                    </StackPanel>
-                                </Border>
-                            </Grid>
-
-                            <Border Style="{StaticResource CyberInfoPanelStyle}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Border Width="54"
-                                            Height="54"
-                                            CornerRadius="8"
-                                            Background="#1F2252A3"
-                                            BorderBrush="#38BDF8"
-                                            BorderThickness="1"
-                                            Margin="0,0,12,0">
-                                        <TextBlock Text="◇"
-                                                   Foreground="#8B5CF6"
-                                                   FontSize="28"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center" />
-                                    </Border>
-                                    <StackPanel Grid.Column="1">
-                                        <TextBlock x:Name="HealthScoreText"
-                                                   Text="健康分 --"
-                                                   Foreground="{StaticResource CyberTextPrimaryBrush}"
-                                                   FontSize="24"
-                                                   FontWeight="SemiBold" />
-                                        <TextBlock x:Name="DiskWarningText"
-                                                   Text="磁盘空间正常"
-                                                   Foreground="#B6C8F7"
-                                                   FontSize="12"
-                                                   Margin="0,4,0,0" />
-                                        <TextBlock x:Name="HealthReasonText"
-                                                   Text="评分参考 CPU、内存、磁盘和高流量压力"
-                                                   Foreground="{StaticResource CyberTextSecondaryBrush}"
-                                                   FontSize="12"
-                                                   TextWrapping="Wrap"
-                                                   Margin="0,4,0,0" />
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-
-                            <Border Style="{StaticResource CyberInfoPanelStyle}">
+                    <TabControl Grid.Row="1"
+                                Margin="0,14,0,0"
+                                Style="{StaticResource CyberTabControlStyle}">
+                        <TabItem Header="总览" Style="{StaticResource CyberTabItemStyle}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled">
                                 <StackPanel>
-                                    <TextBlock Text="◆ 进程占用排行"
+                                    <TextBlock Text="◆ 电脑状态"
                                                Style="{StaticResource CyberSectionTitleStyle}" />
-                                    <TextBlock x:Name="ProcessRankingText"
-                                               Text="正在读取..."
-                                               Foreground="#C5D6FF"
-                                               FontSize="12"
-                                               TextWrapping="Wrap"
-                                               Margin="0,0,0,2" />
-                                </StackPanel>
-                            </Border>
 
-                            <Border Style="{StaticResource CyberInfoPanelStyle}">
-                                <StackPanel>
-                                    <TextBlock Text="◆ 安全清理"
-                                               Style="{StaticResource CyberSectionTitleStyle}" />
-                                    <WrapPanel Margin="0,0,0,6">
-                                        <CheckBox x:Name="CleanupUserTempCheckBox"
-                                                  Content="用户临时文件"
-                                                  IsChecked="True"
-                                                  Style="{StaticResource CyberCheckBoxStyle}" />
-                                        <CheckBox x:Name="CleanupWindowsTempCheckBox"
-                                                  Content="系统临时文件"
-                                                  IsChecked="True"
-                                                  Style="{StaticResource CyberCheckBoxStyle}" />
-                                        <CheckBox x:Name="CleanupRecycleBinCheckBox"
-                                                  Content="回收站"
-                                                  IsChecked="False"
-                                                  Style="{StaticResource CyberCheckBoxStyle}" />
-                                    </WrapPanel>
-                                    <Grid Margin="0,0,0,8">
+                                    <Grid Margin="0,0,0,2">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Button Content="扫描垃圾"
-                                                Grid.Column="0"
-                                                Height="34"
-                                                Style="{StaticResource ActionButtonStyle}"
-                                                Margin="0,0,6,0"
-                                                Click="ScanCleanup_Click" />
-                                        <Button Content="清理选中项"
-                                                Grid.Column="1"
-                                                Height="34"
-                                                Style="{StaticResource ActionButtonStyle}"
-                                                Background="#7C3AED"
-                                                BorderBrush="#C084FC"
-                                                Margin="6,0,0,0"
-                                                Click="RunCleanup_Click" />
-                                    </Grid>
-                                    <TextBlock x:Name="CleanupSummaryText"
-                                               Text="先扫描，再勾选要清理的项目"
-                                               Foreground="{StaticResource CyberTextSecondaryBrush}"
-                                               FontSize="12"
-                                               TextWrapping="Wrap"
-                                               Margin="0,0,0,7" />
-                                    <ListView x:Name="CleanupListView"
-                                              Height="130"
-                                              BorderBrush="#3659D4"
-                                              BorderThickness="1"
-                                              Background="#9908142B"
-                                              Foreground="{StaticResource CyberTextPrimaryBrush}">
-                                        <ListView.ItemContainerStyle>
-                                            <Style TargetType="ListViewItem">
-                                                <Setter Property="Background" Value="Transparent" />
-                                                <Setter Property="Foreground" Value="{StaticResource CyberTextPrimaryBrush}" />
-                                                <Setter Property="Padding" Value="2" />
-                                            </Style>
-                                        </ListView.ItemContainerStyle>
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                                          Margin="0,2"
-                                                          Foreground="{StaticResource CyberTextPrimaryBrush}">
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding DisplayName}"
-                                                                   Foreground="{StaticResource CyberTextPrimaryBrush}"
-                                                                   FontSize="12"
-                                                                   TextTrimming="CharacterEllipsis" />
-                                                        <TextBlock Text="{Binding DetailText}"
-                                                                   Foreground="{StaticResource CyberTextSecondaryBrush}"
-                                                                   FontSize="11"
-                                                                   TextTrimming="CharacterEllipsis" />
-                                                    </StackPanel>
-                                                </CheckBox>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                </StackPanel>
-                            </Border>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
 
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Button Grid.Row="0" Grid.Column="0" Content="生成电脑体检报告" Style="{StaticResource ActionButtonStyle}" Margin="0,0,6,7" Click="RunPcReport_Click" />
-                                <Button Grid.Row="0" Grid.Column="1" Content="生成网络报告" Style="{StaticResource ActionButtonStyle}" Margin="6,0,0,7" Click="RunNetworkReport_Click" />
-                                <Button Grid.Row="1" Grid.Column="0" Content="扫描 D:\ 文件夹占用" Style="{StaticResource ActionButtonStyle}" Margin="0,0,6,7" Click="RunFolderRadar_Click" />
-                                <Button Grid.Row="1" Grid.Column="1" Content="打开报告目录" Style="{StaticResource ActionButtonStyle}" Margin="6,0,0,7" Click="OpenReports_Click" />
-                                <Button Grid.Row="2" Grid.ColumnSpan="2" Content="退出" Style="{StaticResource ActionButtonStyle}" Background="#334155" BorderBrush="#64748B" Margin="0,0,0,0" Click="Exit_Click" />
-                            </Grid>
-                        </StackPanel>
-                    </ScrollViewer>
+                                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CyberMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="CPU" Style="{StaticResource CyberMetricLabelStyle}" />
+                                                <TextBlock x:Name="CpuText" Text="--" Style="{StaticResource CyberMetricValueStyle}" />
+                                                <ProgressBar Height="5" Value="45" Maximum="100" Margin="0,10,0,0" Foreground="#2DE2FF" Background="#263D73" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Row="0" Grid.Column="1" Margin="0,0,0,10" Style="{StaticResource CyberMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="内存" Style="{StaticResource CyberMetricLabelStyle}" />
+                                                <TextBlock x:Name="MemoryText" Text="--" Style="{StaticResource CyberMetricValueStyle}" />
+                                                <ProgressBar Height="5" Value="62" Maximum="100" Margin="0,10,0,0" Foreground="#C084FC" Background="#263D73" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CyberMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="下载" Style="{StaticResource CyberMetricLabelStyle}" />
+                                                <TextBlock x:Name="DownloadText" Text="--" Foreground="#38BDF8" FontSize="19" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="网卡实时接收" Foreground="#668AB6F9" FontSize="11" Margin="0,6,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" Style="{StaticResource CyberMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="上传" Style="{StaticResource CyberMetricLabelStyle}" />
+                                                <TextBlock x:Name="UploadText" Text="--" Foreground="#E879F9" FontSize="19" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="网卡实时发送" Foreground="#668AB6F9" FontSize="11" Margin="0,6,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource CyberMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="磁盘" Style="{StaticResource CyberMetricLabelStyle}" />
+                                                <TextBlock x:Name="DiskText" Text="--" Foreground="{StaticResource CyberTextPrimaryBrush}" FontSize="19" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
+                                                <ProgressBar Height="5" Value="70" Maximum="100" Margin="0,10,0,0" Foreground="#60A5FA" Background="#263D73" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Row="2" Grid.Column="1" Margin="0,0,0,10" Style="{StaticResource CyberMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="温度" Style="{StaticResource CyberMetricLabelStyle}" />
+                                                <TextBlock x:Name="TemperatureText" Text="--" Foreground="{StaticResource CyberTextPrimaryBrush}" FontSize="18" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="传感器状态" Foreground="#668AB6F9" FontSize="11" Margin="0,6,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+
+                                    <Border Style="{StaticResource CyberInfoPanelStyle}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="54"
+                                                    Height="54"
+                                                    CornerRadius="8"
+                                                    Background="#1F2252A3"
+                                                    BorderBrush="#38BDF8"
+                                                    BorderThickness="1"
+                                                    Margin="0,0,12,0">
+                                                <TextBlock Text="◇"
+                                                           Foreground="#8B5CF6"
+                                                           FontSize="28"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center" />
+                                            </Border>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock x:Name="HealthScoreText"
+                                                           Text="健康分 --"
+                                                           Foreground="{StaticResource CyberTextPrimaryBrush}"
+                                                           FontSize="24"
+                                                           FontWeight="SemiBold" />
+                                                <TextBlock x:Name="DiskWarningText"
+                                                           Text="磁盘空间正常"
+                                                           Foreground="#B6C8F7"
+                                                           FontSize="12"
+                                                           Margin="0,4,0,0" />
+                                                <TextBlock x:Name="HealthReasonText"
+                                                           Text="评分参考 CPU、内存、磁盘和高流量压力"
+                                                           Foreground="{StaticResource CyberTextSecondaryBrush}"
+                                                           FontSize="12"
+                                                           TextWrapping="Wrap"
+                                                           Margin="0,4,0,0" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <Border Style="{StaticResource CyberInfoPanelStyle}">
+                                        <StackPanel>
+                                            <TextBlock Text="◆ 功能入口"
+                                                       Style="{StaticResource CyberSectionTitleStyle}" />
+                                            <TextBlock Text="使用上方标签进入清理、网络、进程和报告工具。总览页只保留实时状态，避免把所有功能挤在一起。"
+                                                       Foreground="{StaticResource CyberTextSecondaryBrush}"
+                                                       FontSize="12"
+                                                       TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <TabItem Header="清理" Style="{StaticResource CyberTabItemStyle}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <Border Style="{StaticResource CyberInfoPanelStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="◆ 安全清理"
+                                                   Style="{StaticResource CyberSectionTitleStyle}" />
+                                        <WrapPanel Margin="0,0,0,6">
+                                            <CheckBox x:Name="CleanupUserTempCheckBox"
+                                                      Content="用户临时文件"
+                                                      IsChecked="True"
+                                                      Style="{StaticResource CyberCheckBoxStyle}" />
+                                            <CheckBox x:Name="CleanupWindowsTempCheckBox"
+                                                      Content="系统临时文件"
+                                                      IsChecked="True"
+                                                      Style="{StaticResource CyberCheckBoxStyle}" />
+                                            <CheckBox x:Name="CleanupRecycleBinCheckBox"
+                                                      Content="回收站"
+                                                      IsChecked="False"
+                                                      Style="{StaticResource CyberCheckBoxStyle}" />
+                                        </WrapPanel>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Button Content="扫描垃圾"
+                                                    Grid.Column="0"
+                                                    Height="34"
+                                                    Style="{StaticResource ActionButtonStyle}"
+                                                    Margin="0,0,6,0"
+                                                    Click="ScanCleanup_Click" />
+                                            <Button Content="清理选中项"
+                                                    Grid.Column="1"
+                                                    Height="34"
+                                                    Style="{StaticResource ActionButtonStyle}"
+                                                    Background="#7C3AED"
+                                                    BorderBrush="#C084FC"
+                                                    Margin="6,0,0,0"
+                                                    Click="RunCleanup_Click" />
+                                        </Grid>
+                                        <TextBlock x:Name="CleanupSummaryText"
+                                                   Text="先扫描，再勾选要清理的项目"
+                                                   Foreground="{StaticResource CyberTextSecondaryBrush}"
+                                                   FontSize="12"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,0,0,7" />
+                                        <ListView x:Name="CleanupListView"
+                                                  Height="250"
+                                                  BorderBrush="#3659D4"
+                                                  BorderThickness="1"
+                                                  Background="#9908142B"
+                                                  Foreground="{StaticResource CyberTextPrimaryBrush}">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Setter Property="Foreground" Value="{StaticResource CyberTextPrimaryBrush}" />
+                                                    <Setter Property="Padding" Value="2" />
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                              Margin="0,2"
+                                                              Foreground="{StaticResource CyberTextPrimaryBrush}">
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding DisplayName}"
+                                                                       Foreground="{StaticResource CyberTextPrimaryBrush}"
+                                                                       FontSize="12"
+                                                                       TextTrimming="CharacterEllipsis" />
+                                                            <TextBlock Text="{Binding DetailText}"
+                                                                       Foreground="{StaticResource CyberTextSecondaryBrush}"
+                                                                       FontSize="11"
+                                                                       TextTrimming="CharacterEllipsis" />
+                                                        </StackPanel>
+                                                    </CheckBox>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </StackPanel>
+                                </Border>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <TabItem Header="网络" Style="{StaticResource CyberTabItemStyle}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Style="{StaticResource CyberMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="下载速度" Style="{StaticResource CyberMetricLabelStyle}" />
+                                                <TextBlock x:Name="NetworkDownloadText" Text="--" Foreground="#38BDF8" FontSize="21" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="所有网卡当前接收流量" Foreground="#668AB6F9" FontSize="11" Margin="0,6,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Column="1" Margin="0,0,0,10" Style="{StaticResource CyberMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="上传速度" Style="{StaticResource CyberMetricLabelStyle}" />
+                                                <TextBlock x:Name="NetworkUploadText" Text="--" Foreground="#E879F9" FontSize="21" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="所有网卡当前发送流量" Foreground="#668AB6F9" FontSize="11" Margin="0,6,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                    <Border Style="{StaticResource CyberInfoPanelStyle}">
+                                        <StackPanel>
+                                            <TextBlock Text="◆ 速度说明"
+                                                       Style="{StaticResource CyberSectionTitleStyle}" />
+                                            <TextBlock Text="这里显示的是电脑当前实时网络流量，不是宽带最大测速。下载表示电脑每秒接收的数据量，上传表示电脑每秒发送的数据量。"
+                                                       Foreground="{StaticResource CyberTextSecondaryBrush}"
+                                                       FontSize="12"
+                                                       TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Button Content="生成网络报告" Style="{StaticResource ActionButtonStyle}" Click="RunNetworkReport_Click" />
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <TabItem Header="进程" Style="{StaticResource CyberTabItemStyle}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <Border Style="{StaticResource CyberInfoPanelStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="◆ 进程占用排行"
+                                                   Style="{StaticResource CyberSectionTitleStyle}" />
+                                        <TextBlock x:Name="ProcessRankingText"
+                                                   Text="正在读取..."
+                                                   Foreground="#C5D6FF"
+                                                   FontSize="12"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,0,0,2" />
+                                    </StackPanel>
+                                </Border>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <TabItem Header="报告" Style="{StaticResource CyberTabItemStyle}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Button Grid.Row="0" Grid.Column="0" Content="生成电脑体检报告" Style="{StaticResource ActionButtonStyle}" Margin="0,0,6,7" Click="RunPcReport_Click" />
+                                    <Button Grid.Row="0" Grid.Column="1" Content="生成网络报告" Style="{StaticResource ActionButtonStyle}" Margin="6,0,0,7" Click="RunNetworkReport_Click" />
+                                    <Button Grid.Row="1" Grid.Column="0" Content="扫描 D:\ 文件夹占用" Style="{StaticResource ActionButtonStyle}" Margin="0,0,6,7" Click="RunFolderRadar_Click" />
+                                    <Button Grid.Row="1" Grid.Column="1" Content="打开报告目录" Style="{StaticResource ActionButtonStyle}" Margin="6,0,0,7" Click="OpenReports_Click" />
+                                    <Button Grid.Row="2" Grid.ColumnSpan="2" Content="退出" Style="{StaticResource ActionButtonStyle}" Background="#334155" BorderBrush="#64748B" Margin="0,0,0,0" Click="Exit_Click" />
+                                </Grid>
+                            </ScrollViewer>
+                        </TabItem>
+                    </TabControl>
                 </Grid>
             </Border>
         </StackPanel>

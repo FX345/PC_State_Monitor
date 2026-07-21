@@ -46,7 +46,8 @@ var tests = new List<(string Name, Action Run)>
     ("Safe cleanup skips reparse point directories", TestSafeCleanupSkipsReparsePointDirectories),
     ("Safe cleanup deletes only selected white-listed files", TestSafeCleanupDeletesOnlySelectedWhitelistedFiles),
     ("Safe cleanup ignores inaccessible empty-directory cleanup roots", TestSafeCleanupIgnoresInaccessibleEmptyDirectoryCleanupRoots),
-    ("Main window uses cyber HUD skin resources", TestMainWindowUsesCyberHudSkinResources)
+    ("Main window uses cyber HUD skin resources", TestMainWindowUsesCyberHudSkinResources),
+    ("Main window uses tabbed tool layout", TestMainWindowUsesTabbedToolLayout)
 };
 
 var failed = 0;
@@ -496,6 +497,20 @@ static void TestMainWindowUsesCyberHudSkinResources()
     AssertContains("CyberPulseStoryboard", xaml);
     AssertContains("#07111F", xaml);
     AssertContains("SYSTEM STATUS", xaml);
+}
+
+static void TestMainWindowUsesTabbedToolLayout()
+{
+    var sourceRoot = FindSourceRoot();
+    var xamlPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml");
+    var xaml = File.ReadAllText(xamlPath);
+
+    AssertContains("CyberTabControlStyle", xaml);
+    AssertContains("Header=\"总览\"", xaml);
+    AssertContains("Header=\"清理\"", xaml);
+    AssertContains("Header=\"网络\"", xaml);
+    AssertContains("Header=\"进程\"", xaml);
+    AssertContains("Header=\"报告\"", xaml);
 }
 
 static string FindSourceRoot()

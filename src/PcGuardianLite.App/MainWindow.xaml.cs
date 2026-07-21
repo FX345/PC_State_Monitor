@@ -69,6 +69,8 @@ public partial class MainWindow : Window
         MemoryText.Text = snapshot.MemoryText;
         DownloadText.Text = snapshot.DownloadText;
         UploadText.Text = snapshot.UploadText;
+        NetworkDownloadText.Text = snapshot.DownloadText;
+        NetworkUploadText.Text = snapshot.UploadText;
         DiskText.Text = snapshot.DiskText;
         TemperatureText.Text = snapshot.TemperatureText;
         UpdateHealthAndWarnings(snapshot);
