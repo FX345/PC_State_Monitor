@@ -31,6 +31,8 @@ var tests = new List<(string Name, Action Run)>
     ("Network delta calculates receive speed", TestReceiveSpeed),
     ("Network delta calculates send speed", TestSendSpeed),
     ("Network delta clamps invalid elapsed time", TestInvalidElapsedTime),
+    ("Speed test formats megabits per second", () => AssertEqual("16.4 Mbps", SpeedTestFormatter.FormatMegabitsPerSecond(2_048_000))),
+    ("Speed test service measures download and upload payloads", TestSpeedTestServiceMeasuresDownloadAndUpload),
     ("System monitor formats snapshot", TestSystemMonitorFormatsSnapshot),
     ("Script launcher rejects missing script", TestScriptLauncherRejectsMissingScript),
     ("Script launcher builds safe PowerShell arguments", TestScriptLauncherBuildsSafeArguments),
@@ -49,7 +51,8 @@ var tests = new List<(string Name, Action Run)>
     ("Main window uses cyber HUD skin resources", TestMainWindowUsesCyberHudSkinResources),
     ("Main window uses tabbed tool layout", TestMainWindowUsesTabbedToolLayout),
     ("Main window uses tactical anime motion skin", TestMainWindowUsesTacticalAnimeMotionSkin),
-    ("Main window uses premium instrument shell", TestMainWindowUsesPremiumInstrumentShell)
+    ("Main window uses premium instrument shell", TestMainWindowUsesPremiumInstrumentShell),
+    ("Main window exposes network speed test controls", TestMainWindowExposesNetworkSpeedTestControls)
 };
 
 var failed = 0;
@@ -215,6 +218,28 @@ static void TestInvalidElapsedTime()
 
     AssertEqual(0d, speed.DownloadBytesPerSecond);
     AssertEqual(0d, speed.UploadBytesPerSecond);
+}
+
+static void TestSpeedTestServiceMeasuresDownloadAndUpload()
+{
+    var handler = new FakeSpeedTestHandler(downloadBytes: 4096);
+    var httpClient = new HttpClient(handler)
+    {
+        BaseAddress = new Uri("https://speed.cloudflare.com")
+    };
+    var service = new SpeedTestService(httpClient, downloadBytes: 4096, uploadBytes: 2048);
+
+    var result = service.RunAsync().GetAwaiter().GetResult();
+
+    AssertEqual("GET", handler.DownloadMethod);
+    AssertEqual("/__down?bytes=4096", handler.DownloadPathAndQuery);
+    AssertEqual("POST", handler.UploadMethod);
+    AssertEqual("/__up", handler.UploadPathAndQuery);
+    AssertEqual(2048L, handler.UploadedBytes);
+    AssertEqual(4096L, result.DownloadedBytes);
+    AssertEqual(2048L, result.UploadedBytes);
+    AssertTrue(result.DownloadBytesPerSecond > 0, "Expected download speed above zero.");
+    AssertTrue(result.UploadBytesPerSecond > 0, "Expected upload speed above zero.");
 }
 
 static void TestSystemMonitorFormatsSnapshot()
@@ -555,6 +580,22 @@ static void TestMainWindowUsesPremiumInstrumentShell()
     AssertContains("KeepPanelInsideWorkArea", code);
 }
 
+static void TestMainWindowExposesNetworkSpeedTestControls()
+{
+    var sourceRoot = FindSourceRoot();
+    var xamlPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml");
+    var codePath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml.cs");
+    var xaml = File.ReadAllText(xamlPath);
+    var code = File.ReadAllText(codePath);
+
+    AssertContains("RunSpeedTestButton", xaml);
+    AssertContains("SpeedTestActivityBar", xaml);
+    AssertContains("SpeedTestDownloadText", xaml);
+    AssertContains("SpeedTestUploadText", xaml);
+    AssertContains("RunSpeedTest_Click", code);
+    AssertContains("SpeedTestFormatter.FormatMegabitsPerSecond", code);
+}
+
 static string FindSourceRoot()
 {
     var current = new DirectoryInfo(AppContext.BaseDirectory);
@@ -598,6 +639,60 @@ static void AssertContains(string expected, string actual)
     if (!actual.Contains(expected, StringComparison.Ordinal))
     {
         throw new UnreachableException($"Expected text to contain '{expected}'.");
+    }
+}
+
+static void AssertTrue(bool condition, string message)
+{
+    if (!condition)
+    {
+        throw new UnreachableException(message);
+    }
+}
+
+sealed class FakeSpeedTestHandler : HttpMessageHandler
+{
+    private readonly byte[] downloadPayload;
+
+    public FakeSpeedTestHandler(int downloadBytes)
+    {
+        downloadPayload = new byte[downloadBytes];
+        Array.Fill<byte>(downloadPayload, 7);
+    }
+
+    public string? DownloadMethod { get; private set; }
+
+    public string? DownloadPathAndQuery { get; private set; }
+
+    public string? UploadMethod { get; private set; }
+
+    public string? UploadPathAndQuery { get; private set; }
+
+    public long UploadedBytes { get; private set; }
+
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        if (request.Method == HttpMethod.Get)
+        {
+            DownloadMethod = request.Method.Method;
+            DownloadPathAndQuery = request.RequestUri?.PathAndQuery;
+            return new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(downloadPayload)
+            };
+        }
+
+        UploadMethod = request.Method.Method;
+        UploadPathAndQuery = request.RequestUri?.PathAndQuery;
+        var uploadedPayload = request.Content is null
+            ? Array.Empty<byte>()
+            : await request.Content.ReadAsByteArrayAsync(cancellationToken);
+        UploadedBytes = uploadedPayload.LongLength;
+
+        return new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+        {
+            Content = new StringContent("ok")
+        };
     }
 }
 

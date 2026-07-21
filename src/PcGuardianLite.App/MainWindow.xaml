@@ -398,6 +398,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -419,7 +420,72 @@
                                         </StackPanel>
                                     </Border>
                                 </Grid>
-                                <Border Grid.Row="1" Style="{StaticResource PremiumModuleStyle}">
+                                <Border Grid.Row="1" Style="{StaticResource PremiumModuleStyle}" Margin="0,0,0,18">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel>
+                                            <TextBlock Text="Speed Test" Style="{StaticResource PremiumSectionTitleStyle}" />
+                                            <TextBlock x:Name="SpeedTestStatusText"
+                                                       Text="未测速"
+                                                       Foreground="{StaticResource PremiumTextMutedBrush}"
+                                                       FontSize="12"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0,6,0,0" />
+                                        </StackPanel>
+                                        <Button x:Name="RunSpeedTestButton"
+                                                Grid.Column="1"
+                                                Content="开始测速"
+                                                Style="{StaticResource PremiumPrimaryButtonStyle}"
+                                                Width="148"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Top"
+                                                Click="RunSpeedTest_Click" />
+
+                                        <ProgressBar x:Name="SpeedTestActivityBar"
+                                                     Grid.Row="1"
+                                                     Grid.ColumnSpan="2"
+                                                     Style="{StaticResource TacticalActivityBarStyle}"
+                                                     IsIndeterminate="True"
+                                                     Visibility="Collapsed"
+                                                     Margin="0,16,0,0" />
+
+                                        <UniformGrid Grid.Row="2" Grid.ColumnSpan="2" Columns="2" Margin="0,18,0,0">
+                                            <Border Background="#78101820" BorderBrush="{StaticResource PremiumLineBrush}" BorderThickness="1" Padding="16" Margin="0,0,8,0">
+                                                <StackPanel>
+                                                    <TextBlock Text="测速下载" Style="{StaticResource PremiumLabelStyle}" />
+                                                    <TextBlock x:Name="SpeedTestDownloadText"
+                                                               Text="-- Mbps"
+                                                               Foreground="{StaticResource PremiumAccentBrush}"
+                                                               FontSize="26"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,8,0,0" />
+                                                </StackPanel>
+                                            </Border>
+                                            <Border Background="#78101820" BorderBrush="{StaticResource PremiumLineBrush}" BorderThickness="1" Padding="16" Margin="8,0,0,0">
+                                                <StackPanel>
+                                                    <TextBlock Text="测速上传" Style="{StaticResource PremiumLabelStyle}" />
+                                                    <TextBlock x:Name="SpeedTestUploadText"
+                                                               Text="-- Mbps"
+                                                               Foreground="{StaticResource PremiumAccentAltBrush}"
+                                                               FontSize="26"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,8,0,0" />
+                                                </StackPanel>
+                                            </Border>
+                                        </UniformGrid>
+                                    </Grid>
+                                </Border>
+
+                                <Border Grid.Row="2" Style="{StaticResource PremiumModuleStyle}">
                                     <StackPanel>
                                         <TextBlock Text="网络说明" Style="{StaticResource PremiumSectionTitleStyle}" />
                                         <TextBlock Text="这里显示的是当前实时网络流量，不是宽带最大测速。下载表示电脑每秒接收的数据量，上传表示电脑每秒发送的数据量。"

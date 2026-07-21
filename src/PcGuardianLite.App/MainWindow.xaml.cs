@@ -24,6 +24,7 @@ public partial class MainWindow : Window
     private const double ExpandedWindowHeight = 820;
     private readonly SystemMonitorService monitorService = new(new WindowsMetricProvider());
     private readonly SafeCleanupService cleanupService = new();
+    private readonly SpeedTestService speedTestService = new();
     private readonly ObservableCollection<CleanupTargetViewModel> cleanupItems = new();
     private readonly DispatcherTimer refreshTimer = new();
     private readonly WinFormsNotifyIcon trayIcon;
@@ -367,6 +368,33 @@ public partial class MainWindow : Window
         RunScript("network_report.ps1");
     }
 
+    private async void RunSpeedTest_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            SetSpeedTestActivity(true);
+            SpeedTestStatusText.Text = "正在测速：会进行一次小样本下载和上传，用于估算当前网络带宽。";
+            StatusText.Text = "正在进行网络测速...";
+
+            var result = await speedTestService.RunAsync();
+
+            SpeedTestDownloadText.Text = SpeedTestFormatter.FormatMegabitsPerSecond(result.DownloadBytesPerSecond);
+            SpeedTestUploadText.Text = SpeedTestFormatter.FormatMegabitsPerSecond(result.UploadBytesPerSecond);
+            SpeedTestStatusText.Text =
+                $"测速完成：下载样本 {FormatSize(result.DownloadedBytes)}，上传样本 {FormatSize(result.UploadedBytes)}。";
+            StatusText.Text = "网络测速完成";
+        }
+        catch (Exception ex)
+        {
+            SpeedTestStatusText.Text = $"测速失败：{ex.Message}";
+            StatusText.Text = "网络测速失败";
+        }
+        finally
+        {
+            SetSpeedTestActivity(false);
+        }
+    }
+
     private void RunFolderRadar_Click(object sender, RoutedEventArgs e)
     {
         RunScript("folder_radar.ps1", @"-Path D:\ -Top 20");
@@ -486,6 +514,12 @@ public partial class MainWindow : Window
     private void SetCleanupActivity(bool isActive)
     {
         CleanupActivityBar.Visibility = isActive ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void SetSpeedTestActivity(bool isActive)
+    {
+        RunSpeedTestButton.IsEnabled = !isActive;
+        SpeedTestActivityBar.Visibility = isActive ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void Exit_Click(object sender, RoutedEventArgs e)
