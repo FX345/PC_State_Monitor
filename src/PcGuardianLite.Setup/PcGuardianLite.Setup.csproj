@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\PcGuardianLite.Core\PcGuardianLite.Core.csproj" />
+    <EmbeddedResource Include="Payload\payload.zip" Condition="Exists('Payload\payload.zip')" />
+  </ItemGroup>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>PcGuardianLiteSetup</AssemblyName>
+  </PropertyGroup>
+</Project>

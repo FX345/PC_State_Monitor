@@ -1,0 +1,27 @@
+# Build outputs
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Visual Studio and local settings
+.vs/
+*.user
+*.suo
+*.rsuser
+
+# Test and package outputs
+TestResults/
+*.nupkg
+*.snupkg
+
+# PcGuardianLite generated artifacts
+installer-output/
+installer-payload/
+publish-single/
+src/PcGuardianLite.Setup/Payload/payload.zip
+
+# Logs and temporary files
+*.log
+*.tmp
+*.cache
