@@ -18,10 +18,10 @@ namespace PcGuardianLite.App;
 
 public partial class MainWindow : Window
 {
-    private const double CollapsedWindowWidth = 160;
-    private const double CollapsedWindowHeight = 140;
-    private const double ExpandedWindowWidth = 920;
-    private const double ExpandedWindowHeight = 820;
+    private const double CollapsedWindowWidth = 196;
+    private const double CollapsedWindowHeight = 214;
+    private const double ExpandedWindowWidth = 1500;
+    private const double ExpandedWindowHeight = 900;
     private readonly SystemMonitorService monitorService = new(new WindowsMetricProvider());
     private readonly SafeCleanupService cleanupService = new();
     private readonly SpeedTestService speedTestService = new();
@@ -358,6 +358,26 @@ public partial class MainWindow : Window
         }
     }
 
+    private void OpenCleanupTab_Click(object sender, RoutedEventArgs e)
+    {
+        MainTabs.SelectedIndex = 1;
+    }
+
+    private void OpenNetworkTab_Click(object sender, RoutedEventArgs e)
+    {
+        MainTabs.SelectedIndex = 2;
+    }
+
+    private void OpenProcessTab_Click(object sender, RoutedEventArgs e)
+    {
+        MainTabs.SelectedIndex = 3;
+    }
+
+    private void OpenReportsTab_Click(object sender, RoutedEventArgs e)
+    {
+        MainTabs.SelectedIndex = 4;
+    }
+
     private void RunPcReport_Click(object sender, RoutedEventArgs e)
     {
         RunScript("pc_report.ps1");
@@ -628,7 +648,9 @@ public partial class MainWindow : Window
             .GetTopProcesses(5)
             .Select(process => $"{process.Name}  {process.MemoryMb:0.#} MB  CPU {process.CpuSeconds:0.#}s");
 
-        ProcessRankingText.Text = string.Join(Environment.NewLine, processLines);
+        var rankingText = string.Join(Environment.NewLine, processLines);
+        ProcessRankingText.Text = rankingText;
+        OverviewProcessRankingText.Text = rankingText;
     }
 
     private static double ParsePercent(string text)

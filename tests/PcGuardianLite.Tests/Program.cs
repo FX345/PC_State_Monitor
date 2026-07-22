@@ -52,7 +52,8 @@ var tests = new List<(string Name, Action Run)>
     ("Main window uses tabbed tool layout", TestMainWindowUsesTabbedToolLayout),
     ("Main window uses tactical anime motion skin", TestMainWindowUsesTacticalAnimeMotionSkin),
     ("Main window uses premium instrument shell", TestMainWindowUsesPremiumInstrumentShell),
-    ("Main window exposes network speed test controls", TestMainWindowExposesNetworkSpeedTestControls)
+    ("Main window exposes network speed test controls", TestMainWindowExposesNetworkSpeedTestControls),
+    ("Main window uses reference HUD command shell", TestMainWindowUsesReferenceHudCommandShell)
 };
 
 var failed = 0;
@@ -531,7 +532,7 @@ static void TestMainWindowUsesTabbedToolLayout()
     var xaml = ReadUiSourceText(sourceRoot);
 
     AssertContains("CyberTabControlStyle", xaml);
-    AssertContains("Header=\"总览\"", xaml);
+    AssertContains("Header=\"概览\"", xaml);
     AssertContains("Header=\"清理\"", xaml);
     AssertContains("Header=\"网络\"", xaml);
     AssertContains("Header=\"进程\"", xaml);
@@ -596,6 +597,39 @@ static void TestMainWindowExposesNetworkSpeedTestControls()
     AssertContains("SpeedTestFormatter.FormatMegabitsPerSecond", code);
 }
 
+static void TestMainWindowUsesReferenceHudCommandShell()
+{
+    var sourceRoot = FindSourceRoot();
+    var xamlPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml");
+    var themePath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "Styles", "PremiumTheme.xaml");
+    var codePath = Path.Combine(sourceRoot, "src", "PcGuardianLite.App", "MainWindow.xaml.cs");
+    var ui = ReadUiSourceText(sourceRoot);
+    var xaml = File.ReadAllText(xamlPath);
+    var theme = File.ReadAllText(themePath);
+    var code = File.ReadAllText(codePath);
+
+    AssertNotContains("电脑管家", xaml);
+    AssertContains("BrandLogoMark", ui);
+    AssertContains("ReferenceHudShellGrid", ui);
+    AssertContains("HudSideRail", ui);
+    AssertContains("HudTopStatusBar", xaml);
+    AssertContains("HudBottomTelemetryBar", xaml);
+    AssertContains("HudQuickToolGrid", xaml);
+    AssertContains("HudCleanupResultsTable", xaml);
+    AssertContains("HudProcessTable", xaml);
+    AssertContains("HudReportActionGrid", xaml);
+    AssertContains("HudSpeedTestGauge", xaml);
+    AssertContains("MainTabs", xaml);
+    AssertContains("OpenCleanupTab_Click", code);
+    AssertContains("OpenNetworkTab_Click", code);
+    AssertContains("OpenProcessTab_Click", code);
+    AssertContains("OpenReportsTab_Click", code);
+    AssertContains("HudCommandShellBrush", theme);
+    AssertContains("HudActionCardStyle", theme);
+    AssertContains("HudNavTabItemStyle", theme);
+    AssertContains("ExpandedWindowWidth = 1500", code);
+}
+
 static string FindSourceRoot()
 {
     var current = new DirectoryInfo(AppContext.BaseDirectory);
@@ -639,6 +673,14 @@ static void AssertContains(string expected, string actual)
     if (!actual.Contains(expected, StringComparison.Ordinal))
     {
         throw new UnreachableException($"Expected text to contain '{expected}'.");
+    }
+}
+
+static void AssertNotContains(string unexpected, string actual)
+{
+    if (actual.Contains(unexpected, StringComparison.Ordinal))
+    {
+        throw new UnreachableException($"Expected text not to contain '{unexpected}'.");
     }
 }
 

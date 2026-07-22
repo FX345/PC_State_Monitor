@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="PcGuardianLite"
-        Width="920"
-        Height="820"
+        Width="1500"
+        Height="900"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -19,18 +19,18 @@
             <DoubleAnimation Storyboard.TargetName="BallPulseScale"
                              Storyboard.TargetProperty="ScaleX"
                              From="1"
-                             To="1.018"
-                             Duration="0:0:2.8" />
+                             To="1.012"
+                             Duration="0:0:3.2" />
             <DoubleAnimation Storyboard.TargetName="BallPulseScale"
                              Storyboard.TargetProperty="ScaleY"
                              From="1"
-                             To="1.018"
-                             Duration="0:0:2.8" />
+                             To="1.012"
+                             Duration="0:0:3.2" />
             <DoubleAnimation Storyboard.TargetName="BallOuterHalo"
                              Storyboard.TargetProperty="Opacity"
-                             From="0.18"
-                             To="0.42"
-                             Duration="0:0:2.8" />
+                             From="0.28"
+                             To="0.54"
+                             Duration="0:0:3.2" />
         </Storyboard>
     </Window.Resources>
 
@@ -39,7 +39,7 @@
                 Style="{StaticResource PremiumFloatingBallStyle}"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Margin="0,4,20,0"
+                Margin="0,42,20,0"
                 MouseLeftButtonDown="FloatingBall_MouseLeftButtonDown"
                 MouseMove="FloatingBall_MouseMove"
                 MouseLeftButtonUp="FloatingBall_MouseLeftButtonUp">
@@ -70,33 +70,33 @@
                 </ContextMenu>
             </Border.ContextMenu>
             <Grid>
-                <Ellipse x:Name="BallOuterHalo"
-                         Stroke="#5529C7E8"
-                         StrokeThickness="2"
-                         Margin="3"
-                         Opacity="0.24" />
-                <Ellipse Stroke="#6645D483" StrokeThickness="1" Margin="12" />
-                <Ellipse Stroke="#443F4A59" StrokeThickness="1" Margin="22" />
-                <Path Stroke="{StaticResource PremiumAccentBrush}"
-                      StrokeThickness="2"
-                      Opacity="0.82"
-                      Data="M 33,20 A 42,42 0 0 1 88,32"
+                <Ellipse x:Name="BallOuterHalo" Stroke="#7829C7E8" StrokeThickness="2" Margin="1" Opacity="0.36" />
+                <Ellipse Stroke="#AA087CFF" StrokeThickness="3" Margin="10" StrokeDashArray="7 4" />
+                <Ellipse Stroke="#CC8B5CFF" StrokeThickness="4" Margin="20" StrokeDashArray="13 6" />
+                <Ellipse Stroke="#4429C7E8" StrokeThickness="1" Margin="32" />
+                <Path Stroke="#FF29C7E8"
+                      StrokeThickness="3"
+                      Opacity="0.92"
+                      Data="M 36,22 A 56,56 0 0 1 116,45"
                       Stretch="None" />
-                <StackPanel Width="94" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Path Stroke="#FF8B5CFF"
+                      StrokeThickness="3"
+                      Opacity="0.9"
+                      Data="M 118,47 A 56,56 0 0 1 103,124"
+                      Stretch="None" />
+                <StackPanel Width="116" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock x:Name="BallMemoryText"
                                Text="内存 --"
                                Foreground="{StaticResource PremiumTextBrush}"
-                               FontSize="15"
+                               FontSize="16"
                                FontWeight="SemiBold"
                                TextAlignment="Center"
                                TextTrimming="CharacterEllipsis" />
-                    <Border Height="1"
-                            Margin="16,8"
-                            Background="{StaticResource PremiumLineStrongBrush}" />
+                    <Border Height="1" Margin="22,10" Background="{StaticResource PremiumLineStrongBrush}" />
                     <TextBlock x:Name="BallDownloadText"
                                Text="下载 --"
-                               Foreground="{StaticResource PremiumTextMutedBrush}"
-                               FontSize="12"
+                               Foreground="{StaticResource PremiumAccentBrush}"
+                               FontSize="13"
                                TextAlignment="Center"
                                TextTrimming="CharacterEllipsis" />
                 </StackPanel>
@@ -104,13 +104,13 @@
         </Border>
 
         <Border x:Name="DetailPanel"
-                Width="860"
-                MaxHeight="680"
-                Margin="0,132,20,0"
+                Width="1320"
+                Height="842"
+                Margin="0,26,156,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Background="{StaticResource PremiumShellBrush}"
-                BorderBrush="{StaticResource PremiumLineStrongBrush}"
+                Background="{StaticResource HudCommandShellBrush}"
+                BorderBrush="#7A4D9FE8"
                 BorderThickness="1"
                 CornerRadius="8"
                 Padding="0"
@@ -121,451 +121,707 @@
                 <TranslateTransform x:Name="PanelEntranceTransform" Y="0" />
             </Border.RenderTransform>
             <Border.Effect>
-                <DropShadowEffect BlurRadius="28" ShadowDepth="8" Color="#020408" Opacity="0.58" />
+                <DropShadowEffect BlurRadius="36" ShadowDepth="12" Color="#020408" Opacity="0.72" />
             </Border.Effect>
 
             <Grid x:Name="PremiumShellGrid">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="88" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="42" />
-                </Grid.RowDefinitions>
+                <Grid x:Name="ReferenceHudShellGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="72" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="64" />
+                    </Grid.RowDefinitions>
 
-                <Border Grid.Row="0"
-                        Background="#B80B1017"
-                        BorderBrush="{StaticResource PremiumLineBrush}"
-                        BorderThickness="0,0,0,1"
-                        CornerRadius="8,8,0,0">
-                    <Grid Margin="24,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="电脑管家"
-                                       Foreground="{StaticResource PremiumTextBrush}"
-                                       FontSize="24"
-                                       FontWeight="SemiBold" />
-                            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                    <Border Grid.RowSpan="3"
+                            Margin="12"
+                            BorderBrush="#2A29C7E8"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Opacity="0.9" />
+
+                    <Border x:Name="HudTopStatusBar"
+                            Grid.Row="0"
+                            Margin="176,14,28,0"
+                            BorderBrush="#1F29C7E8"
+                            BorderThickness="0,1,0,0">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center">
+                                <Border Style="{StaticResource PremiumStatusPillStyle}" Margin="0,0,18,0">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Ellipse Width="8" Height="8" Fill="{StaticResource PremiumOkBrush}" Margin="0,0,8,0" />
+                                        <TextBlock Text="正常监控中"
+                                                   Foreground="{StaticResource PremiumOkBrush}"
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Border>
                                 <TextBlock Text="SYSTEM STATUS"
-                                           Foreground="{StaticResource PremiumTextMutedBrush}"
-                                           FontSize="11" />
-                                <Border Width="1" Height="12" Margin="12,0" Background="{StaticResource PremiumLineBrush}" />
+                                           Foreground="{StaticResource PremiumTextWeakBrush}"
+                                           FontSize="11"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,18,0" />
                                 <TextBlock x:Name="StatusText"
                                            Text="就绪"
                                            Foreground="{StaticResource PremiumTextMutedBrush}"
                                            FontSize="12"
+                                           VerticalAlignment="Center"
                                            TextTrimming="CharacterEllipsis"
-                                           MaxWidth="420" />
+                                           MaxWidth="360"
+                                           Margin="0,0,18,0" />
+                                <Button Content="-"
+                                        Width="38"
+                                        Height="32"
+                                        Padding="0"
+                                        Margin="0,0,8,0"
+                                        Style="{StaticResource PremiumButtonStyle}"
+                                        Click="ClosePanel_Click" />
+                                <Button Content="×"
+                                        Width="38"
+                                        Height="32"
+                                        Padding="0"
+                                        Margin="0"
+                                        Style="{StaticResource PremiumButtonStyle}"
+                                        Click="ClosePanel_Click" />
                             </StackPanel>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1"
-                                    Orientation="Horizontal"
-                                    VerticalAlignment="Center">
-                            <Border Style="{StaticResource PremiumStatusPillStyle}" Margin="0,0,14,0">
-                                <TextBlock Text="MONITORING"
-                                           Foreground="{StaticResource PremiumOkBrush}"
-                                           FontSize="11"
-                                           FontWeight="SemiBold"
-                                           VerticalAlignment="Center" />
-                            </Border>
-                            <Button Content="×"
-                                    Width="34"
-                                    Height="34"
-                                    Padding="0"
-                                    Margin="0"
-                                    Background="#151D27"
-                                    BorderBrush="{StaticResource PremiumLineStrongBrush}"
-                                    Foreground="{StaticResource PremiumTextBrush}"
-                                    Style="{StaticResource PremiumButtonStyle}"
-                                    Click="ClosePanel_Click" />
-                        </StackPanel>
-                    </Grid>
-                </Border>
+                        </Grid>
+                    </Border>
 
-                <TabControl Grid.Row="1"
-                            Style="{StaticResource PremiumNavigationTabControlStyle}"
-                            ItemContainerStyle="{StaticResource PremiumNavigationTabItemStyle}">
-                    <TabItem Header="总览">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                            <Grid Margin="0,2,20,0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <Grid x:Name="MetricGrid" Grid.Row="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
+                    <TabControl x:Name="MainTabs"
+                                Grid.Row="1"
+                                Margin="0,0,28,0"
+                                Style="{StaticResource PremiumNavigationTabControlStyle}"
+                                ItemContainerStyle="{StaticResource HudNavTabItemStyle}">
+                        <TabItem Header="概览">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <Grid Margin="0,24,0,0">
                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource PremiumMetricCardStyle}">
-                                        <StackPanel>
-                                            <TextBlock Text="CPU" Style="{StaticResource PremiumLabelStyle}" />
-                                            <TextBlock x:Name="CpuText" Text="--" Style="{StaticResource PremiumValueStyle}" />
-                                            <ProgressBar Height="5" Value="45" Maximum="100" Foreground="{StaticResource PremiumAccentBrush}" Style="{StaticResource PremiumProgressBarStyle}" Margin="0,14,0,0" />
-                                            <TextBlock Text="当前占用率" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,10,0,0" />
-                                        </StackPanel>
-                                    </Border>
-                                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource PremiumMetricCardStyle}">
-                                        <StackPanel>
-                                            <TextBlock Text="内存" Style="{StaticResource PremiumLabelStyle}" />
-                                            <TextBlock x:Name="MemoryText" Text="--" Style="{StaticResource PremiumValueStyle}" />
-                                            <ProgressBar Height="5" Value="62" Maximum="100" Foreground="{StaticResource PremiumAccentAltBrush}" Style="{StaticResource PremiumProgressBarStyle}" Margin="0,14,0,0" />
-                                            <TextBlock Text="物理内存使用" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,10,0,0" />
-                                        </StackPanel>
-                                    </Border>
-                                    <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource PremiumMetricCardStyle}" Margin="0,0,0,18">
-                                        <StackPanel>
-                                            <TextBlock Text="磁盘" Style="{StaticResource PremiumLabelStyle}" />
-                                            <TextBlock x:Name="DiskText" Text="--" Style="{StaticResource PremiumValueStyle}" />
-                                            <ProgressBar Height="5" Value="70" Maximum="100" Foreground="{StaticResource PremiumWarnBrush}" Style="{StaticResource PremiumProgressBarStyle}" Margin="0,14,0,0" />
-                                            <TextBlock Text="空间占用率" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,10,0,0" />
-                                        </StackPanel>
-                                    </Border>
-
-                                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource PremiumMetricCardStyle}">
-                                        <StackPanel>
-                                            <TextBlock Text="下载" Style="{StaticResource PremiumLabelStyle}" />
-                                            <TextBlock x:Name="DownloadText" Text="--" Foreground="{StaticResource PremiumAccentBrush}" FontSize="25" FontWeight="SemiBold" Margin="0,8,0,0" TextTrimming="CharacterEllipsis" />
-                                            <TextBlock Text="网卡实时接收" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,12,0,0" />
-                                        </StackPanel>
-                                    </Border>
-                                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource PremiumMetricCardStyle}">
-                                        <StackPanel>
-                                            <TextBlock Text="上传" Style="{StaticResource PremiumLabelStyle}" />
-                                            <TextBlock x:Name="UploadText" Text="--" Foreground="{StaticResource PremiumAccentAltBrush}" FontSize="25" FontWeight="SemiBold" Margin="0,8,0,0" TextTrimming="CharacterEllipsis" />
-                                            <TextBlock Text="网卡实时发送" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,12,0,0" />
-                                        </StackPanel>
-                                    </Border>
-                                    <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource PremiumMetricCardStyle}" Margin="0,0,0,18">
-                                        <StackPanel>
-                                            <TextBlock Text="温度" Style="{StaticResource PremiumLabelStyle}" />
-                                            <TextBlock x:Name="TemperatureText" Text="--" Style="{StaticResource PremiumValueStyle}" FontSize="22" />
-                                            <Border Style="{StaticResource PremiumStatusPillStyle}" Background="#182B3542" BorderBrush="{StaticResource PremiumLineStrongBrush}" Margin="0,14,0,0">
-                                                <TextBlock Text="传感器状态" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="11" VerticalAlignment="Center" />
-                                            </Border>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-
-                                <Grid Grid.Row="1" Margin="0,2,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1.1*" />
-                                        <ColumnDefinition Width="0.9*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Border Grid.Column="0" Style="{StaticResource PremiumModuleStyle}" Margin="0,0,18,18">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="96" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid Width="76" Height="76" VerticalAlignment="Center">
-                                                <Ellipse Stroke="{StaticResource PremiumLineStrongBrush}" StrokeThickness="5" />
-                                                <Ellipse Stroke="{StaticResource PremiumAccentBrush}" StrokeThickness="5" StrokeDashArray="3 1.2" />
-                                                <TextBlock x:Name="HealthScoreText"
-                                                           Text="健康分 --"
-                                                           Foreground="{StaticResource PremiumAccentBrush}"
-                                                           FontSize="20"
-                                                           FontWeight="SemiBold"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"
-                                                           TextAlignment="Center" />
-                                            </Grid>
-                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                <TextBlock Text="健康评分" Style="{StaticResource PremiumSectionTitleStyle}" Margin="0,0,0,8" />
-                                                <TextBlock x:Name="DiskWarningText" Text="磁盘空间正常" Foreground="{StaticResource PremiumTextBrush}" FontSize="14" />
-                                                <TextBlock x:Name="HealthReasonText"
-                                                           Text="评分参考 CPU、内存、磁盘和高流量压力"
-                                                           Foreground="{StaticResource PremiumTextMutedBrush}"
-                                                           FontSize="12"
-                                                           TextWrapping="Wrap"
-                                                           Margin="0,8,0,0" />
-                                            </StackPanel>
-                                        </Grid>
-                                    </Border>
-
-                                    <Border Grid.Column="1" Style="{StaticResource PremiumModuleStyle}" Margin="0,0,0,18">
-                                        <StackPanel>
-                                            <TextBlock Text="工作流" Style="{StaticResource PremiumSectionTitleStyle}" />
-                                            <TextBlock Text="概览保持安静，只显示关键状态。使用左侧导航进入清理、网络、进程和报告工具。"
-                                                       Foreground="{StaticResource PremiumTextMutedBrush}"
-                                                       FontSize="12"
-                                                       TextWrapping="Wrap" />
-                                            <Border Style="{StaticResource PremiumStatusPillStyle}" Background="#1429C7E8" BorderBrush="#4429C7E8" Margin="0,16,0,0">
-                                                <TextBlock Text="轻量运行 / 无广告 / 保守清理" Foreground="{StaticResource PremiumAccentBrush}" FontSize="11" VerticalAlignment="Center" />
-                                            </Border>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-
-                                <Border Grid.Row="2" Style="{StaticResource PremiumModuleStyle}">
                                     <StackPanel>
-                                        <TextBlock Text="模块入口" Style="{StaticResource PremiumSectionTitleStyle}" />
-                                        <UniformGrid Columns="4">
-                                            <TextBlock Text="清理优化" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" />
-                                            <TextBlock Text="网络诊断" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" />
-                                            <TextBlock Text="进程排行" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" />
-                                            <TextBlock Text="报告输出" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" />
-                                        </UniformGrid>
+                                        <TextBlock Text="系统概览" Style="{StaticResource HudPageTitleStyle}" />
+                                        <TextBlock Text="实时监控系统状态，全面了解设备运行情况" Style="{StaticResource HudPageSubtitleStyle}" />
                                     </StackPanel>
-                                </Border>
-                            </Grid>
-                        </ScrollViewer>
-                    </TabItem>
 
-                    <TabItem Header="清理">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                            <Grid Margin="0,2,20,0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <Border Grid.Row="0" Style="{StaticResource PremiumModuleStyle}">
-                                    <StackPanel>
-                                        <TextBlock Text="安全清理" Style="{StaticResource PremiumSectionTitleStyle}" />
-                                        <TextBlock Text="扫描前不会删除文件。清理项采用保守白名单策略，回收站需要额外确认。"
-                                                   Foreground="{StaticResource PremiumTextMutedBrush}"
-                                                   FontSize="12"
-                                                   TextWrapping="Wrap"
-                                                   Margin="0,0,0,16" />
-                                        <WrapPanel>
-                                            <CheckBox x:Name="CleanupUserTempCheckBox" Content="用户临时文件" IsChecked="True" Style="{StaticResource PremiumCheckBoxStyle}" />
-                                            <CheckBox x:Name="CleanupWindowsTempCheckBox" Content="系统临时文件" IsChecked="True" Style="{StaticResource PremiumCheckBoxStyle}" />
-                                            <CheckBox x:Name="CleanupRecycleBinCheckBox" Content="回收站" IsChecked="False" Style="{StaticResource PremiumCheckBoxStyle}" />
-                                        </WrapPanel>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Button Grid.Column="0" Content="扫描垃圾" Style="{StaticResource PremiumPrimaryButtonStyle}" Margin="0,6,8,0" Click="ScanCleanup_Click" />
-                                            <Button Grid.Column="1" Content="清理选中项" Style="{StaticResource PremiumButtonStyle}" Margin="8,6,0,0" Click="RunCleanup_Click" />
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-                                <Border Grid.Row="1" Style="{StaticResource PremiumModuleStyle}">
-                                    <StackPanel>
-                                        <TextBlock x:Name="CleanupSummaryText"
-                                                   Text="先扫描，再勾选要清理的项目"
-                                                   Foreground="{StaticResource PremiumTextMutedBrush}"
-                                                   FontSize="13"
-                                                   TextWrapping="Wrap" />
-                                        <ProgressBar x:Name="CleanupActivityBar"
-                                                     Style="{StaticResource TacticalActivityBarStyle}"
-                                                     IsIndeterminate="True"
-                                                     Visibility="Collapsed"
-                                                     Margin="0,14,0,0" />
-                                    </StackPanel>
-                                </Border>
-                                <ListView Grid.Row="2"
-                                          x:Name="CleanupListView"
-                                          Height="260"
-                                          Style="{StaticResource PremiumListViewStyle}"
-                                          ItemContainerStyle="{StaticResource PremiumListViewItemStyle}">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                                      Foreground="{StaticResource PremiumTextBrush}">
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
-                                                    <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource PremiumTextBrush}" FontSize="13" TextTrimming="CharacterEllipsis" />
-                                                    <TextBlock Grid.Row="1" Text="{Binding DetailText}" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="11" TextTrimming="CharacterEllipsis" />
+                                    <UniformGrid x:Name="MetricGrid" Grid.Row="1" Columns="6" Margin="0,20,0,4">
+                                        <Border Style="{StaticResource HudMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="CPU" Style="{StaticResource PremiumLabelStyle}" />
+                                                <Grid Width="86" Height="86" Margin="0,18,0,0" HorizontalAlignment="Left">
+                                                    <Ellipse Stroke="#273A4E63" StrokeThickness="8" />
+                                                    <Ellipse Stroke="{StaticResource PremiumAccentBrush}" StrokeThickness="8" StrokeDashArray="3 1.8" />
+                                                    <TextBlock x:Name="CpuText" Text="--" Style="{StaticResource PremiumValueStyle}" FontSize="23" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Grid>
-                                            </CheckBox>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </Grid>
-                        </ScrollViewer>
-                    </TabItem>
+                                                <Polyline Points="0,22 12,16 24,20 35,12 48,17 62,10 76,15 90,11 104,18 118,13 132,20"
+                                                          Stroke="{StaticResource PremiumAccentBrush}"
+                                                          StrokeThickness="1.5"
+                                                          Fill="#2529C7E8"
+                                                          Margin="0,16,0,0" />
+                                                <TextBlock Text="当前占用率" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,10,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource HudMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="内存" Style="{StaticResource PremiumLabelStyle}" />
+                                                <Grid Width="86" Height="86" Margin="0,18,0,0" HorizontalAlignment="Left">
+                                                    <Ellipse Stroke="#273A4E63" StrokeThickness="8" />
+                                                    <Ellipse Stroke="{StaticResource PremiumAccentAltBrush}" StrokeThickness="8" StrokeDashArray="4 1.8" />
+                                                    <TextBlock x:Name="MemoryText" Text="--" Style="{StaticResource PremiumValueStyle}" FontSize="23" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Grid>
+                                                <Polyline Points="0,24 12,20 25,18 38,26 50,12 63,20 76,17 88,23 102,16 116,21 132,14"
+                                                          Stroke="{StaticResource PremiumAccentAltBrush}"
+                                                          StrokeThickness="1.5"
+                                                          Fill="#257C6DF2"
+                                                          Margin="0,16,0,0" />
+                                                <TextBlock Text="物理内存使用" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,10,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource HudMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="磁盘" Style="{StaticResource PremiumLabelStyle}" />
+                                                <Grid Width="86" Height="86" Margin="0,18,0,0" HorizontalAlignment="Left">
+                                                    <Ellipse Stroke="#273A4E63" StrokeThickness="8" />
+                                                    <Ellipse Stroke="#FF10E9D0" StrokeThickness="8" StrokeDashArray="5 1.5" />
+                                                    <TextBlock x:Name="DiskText" Text="--" Style="{StaticResource PremiumValueStyle}" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Grid>
+                                                <ProgressBar Height="28" Value="72" Maximum="100" Foreground="#FF10E9D0" Style="{StaticResource PremiumProgressBarStyle}" Margin="0,16,0,0" />
+                                                <TextBlock Text="空间占用率" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,10,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource HudMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="下载" Style="{StaticResource PremiumLabelStyle}" />
+                                                <TextBlock x:Name="DownloadText" Text="--" Foreground="{StaticResource PremiumAccentBrush}" FontSize="30" FontWeight="SemiBold" Margin="0,36,0,0" TextTrimming="CharacterEllipsis" />
+                                                <Polyline Points="0,34 14,27 28,30 44,17 61,23 76,18 92,25 108,21 124,29 140,22"
+                                                          Stroke="{StaticResource PremiumAccentBrush}"
+                                                          StrokeThickness="1.5"
+                                                          Fill="#1E29C7E8"
+                                                          Margin="0,22,0,0" />
+                                                <TextBlock Text="实时接收" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,10,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource HudMetricCardStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="上传" Style="{StaticResource PremiumLabelStyle}" />
+                                                <TextBlock x:Name="UploadText" Text="--" Foreground="{StaticResource PremiumAccentAltBrush}" FontSize="30" FontWeight="SemiBold" Margin="0,36,0,0" TextTrimming="CharacterEllipsis" />
+                                                <Polyline Points="0,32 15,28 28,20 42,25 58,15 72,19 88,24 104,17 122,21 140,16"
+                                                          Stroke="{StaticResource PremiumAccentAltBrush}"
+                                                          StrokeThickness="1.5"
+                                                          Fill="#1D7C6DF2"
+                                                          Margin="0,22,0,0" />
+                                                <TextBlock Text="实时发送" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,10,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Style="{StaticResource HudMetricCardStyle}" Margin="0,0,0,18">
+                                            <StackPanel>
+                                                <TextBlock Text="温度" Style="{StaticResource PremiumLabelStyle}" />
+                                                <TextBlock x:Name="TemperatureText" Text="--" Style="{StaticResource PremiumValueStyle}" FontSize="24" Margin="0,58,0,0" />
+                                                <Border Style="{StaticResource PremiumStatusPillStyle}" Background="#131B2634" BorderBrush="#243A4E63" Margin="0,34,0,0">
+                                                    <TextBlock Text="传感器状态" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="11" VerticalAlignment="Center" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Border>
+                                    </UniformGrid>
 
-                    <TabItem Header="网络">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                            <Grid Margin="0,2,20,0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Style="{StaticResource PremiumMetricCardStyle}">
-                                        <StackPanel>
-                                            <TextBlock Text="下载速度" Style="{StaticResource PremiumLabelStyle}" />
-                                            <TextBlock x:Name="NetworkDownloadText" Text="--" Foreground="{StaticResource PremiumAccentBrush}" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,0" />
-                                            <TextBlock Text="所有网卡当前接收流量" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,12,0,0" />
-                                        </StackPanel>
-                                    </Border>
-                                    <Border Grid.Column="1" Style="{StaticResource PremiumMetricCardStyle}" Margin="0,0,0,18">
-                                        <StackPanel>
-                                            <TextBlock Text="上传速度" Style="{StaticResource PremiumLabelStyle}" />
-                                            <TextBlock x:Name="NetworkUploadText" Text="--" Foreground="{StaticResource PremiumAccentAltBrush}" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,0" />
-                                            <TextBlock Text="所有网卡当前发送流量" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" Margin="0,12,0,0" />
-                                        </StackPanel>
+                                    <Grid Grid.Row="2" Margin="0,0,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.08*" />
+                                            <ColumnDefinition Width="1.42*" />
+                                            <ColumnDefinition Width="0.9*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Grid.Column="0" Style="{StaticResource HudPanelStyle}">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="*" />
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="健康评分" Style="{StaticResource PremiumSectionTitleStyle}" />
+                                                <Grid Grid.Row="1" Margin="0,4,0,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="144" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid Width="126" Height="126" VerticalAlignment="Center">
+                                                        <Ellipse Stroke="#233A4E63" StrokeThickness="12" />
+                                                        <Ellipse Stroke="{StaticResource PremiumAccentBrush}" StrokeThickness="12" StrokeDashArray="8 3" />
+                                                        <TextBlock x:Name="HealthScoreText"
+                                                                   Text="--"
+                                                                   Foreground="{StaticResource PremiumAccentBrush}"
+                                                                   FontSize="38"
+                                                                   FontWeight="SemiBold"
+                                                                   HorizontalAlignment="Center"
+                                                                   VerticalAlignment="Center" />
+                                                    </Grid>
+                                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                        <TextBlock x:Name="DiskWarningText" Text="磁盘空间正常" Foreground="{StaticResource PremiumTextBrush}" FontSize="15" FontWeight="SemiBold" />
+                                                        <TextBlock x:Name="HealthReasonText"
+                                                                   Text="评分参考 CPU、内存、磁盘和网络压力"
+                                                                   Foreground="{StaticResource PremiumTextMutedBrush}"
+                                                                   FontSize="12"
+                                                                   TextWrapping="Wrap"
+                                                                   Margin="0,10,0,18" />
+                                                        <UniformGrid Columns="4">
+                                                            <Border Style="{StaticResource HudTinyInfoCardStyle}">
+                                                                <StackPanel>
+                                                                    <TextBlock Text="资源状态" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="11" />
+                                                                    <TextBlock Text="良好" Foreground="{StaticResource PremiumAccentBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,8,0,0" />
+                                                                </StackPanel>
+                                                            </Border>
+                                                            <Border Style="{StaticResource HudTinyInfoCardStyle}">
+                                                                <StackPanel>
+                                                                    <TextBlock Text="硬件状态" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="11" />
+                                                                    <TextBlock Text="正常" Foreground="#FF10E9D0" FontSize="13" FontWeight="SemiBold" Margin="0,8,0,0" />
+                                                                </StackPanel>
+                                                            </Border>
+                                                            <Border Style="{StaticResource HudTinyInfoCardStyle}">
+                                                                <StackPanel>
+                                                                    <TextBlock Text="安全风险" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="11" />
+                                                                    <TextBlock Text="低风险" Foreground="{StaticResource PremiumOkBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,8,0,0" />
+                                                                </StackPanel>
+                                                            </Border>
+                                                            <Border Style="{StaticResource HudTinyInfoCardStyle}" Margin="0">
+                                                                <StackPanel>
+                                                                    <TextBlock Text="启动项" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="11" />
+                                                                    <TextBlock Text="优化" Foreground="{StaticResource PremiumAccentBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,8,0,0" />
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </UniformGrid>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+
+                                        <Border Grid.Column="1" Style="{StaticResource HudPanelStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="进程占用排行" Style="{StaticResource PremiumSectionTitleStyle}" />
+                                                <Border Background="#77101820" BorderBrush="#263A4E63" BorderThickness="1" Padding="14">
+                                                    <TextBlock x:Name="OverviewProcessRankingText"
+                                                               Text="正在读取..."
+                                                               Foreground="{StaticResource PremiumTextBrush}"
+                                                               FontSize="13"
+                                                               FontFamily="Consolas"
+                                                               TextWrapping="Wrap" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Grid.Column="2" Style="{StaticResource HudPanelStyle}" Margin="0,0,0,18">
+                                            <StackPanel>
+                                                <TextBlock Text="快捷工具" Style="{StaticResource PremiumSectionTitleStyle}" />
+                                                <UniformGrid x:Name="HudQuickToolGrid" Columns="2">
+                                                    <Button Content="垃圾清理" Style="{StaticResource PremiumButtonStyle}" Margin="0,0,8,10" Click="OpenCleanupTab_Click" />
+                                                    <Button Content="网络测速" Style="{StaticResource PremiumButtonStyle}" Margin="8,0,0,10" Click="OpenNetworkTab_Click" />
+                                                    <Button Content="进程排行" Style="{StaticResource PremiumButtonStyle}" Margin="0,0,8,10" Click="OpenProcessTab_Click" />
+                                                    <Button Content="报告工具" Style="{StaticResource PremiumButtonStyle}" Margin="8,0,0,10" Click="OpenReportsTab_Click" />
+                                                </UniformGrid>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <TabItem Header="清理">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <Grid Margin="0,24,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="安全清理" Style="{StaticResource HudPageTitleStyle}" />
+                                        <TextBlock Text="扫描并清理系统中的无用文件，释放磁盘空间，保持系统流畅稳定。" Style="{StaticResource HudPageSubtitleStyle}" />
+                                    </StackPanel>
+
+                                    <Grid Grid.Row="1" Margin="0,22,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.5*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Style="{StaticResource HudPanelStyle}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="150" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid Width="124" Height="124" VerticalAlignment="Center">
+                                                    <Ellipse Stroke="#263A4E63" StrokeThickness="10" />
+                                                    <Ellipse Stroke="{StaticResource PremiumAccentBrush}" StrokeThickness="3" StrokeDashArray="4 3" />
+                                                    <Path Data="M42,64 L57,78 L86,42" Stroke="{StaticResource PremiumTextBrush}" StrokeThickness="8" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                                                </Grid>
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="安全清理" Style="{StaticResource PremiumSectionTitleStyle}" />
+                                                    <TextBlock Text="扫描前不会删除文件。清理项采用保守白名单策略，回收站需要额外确认。" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" TextWrapping="Wrap" />
+                                                    <WrapPanel Margin="0,22,0,8">
+                                                        <CheckBox x:Name="CleanupUserTempCheckBox" Content="用户临时文件" IsChecked="True" Style="{StaticResource PremiumCheckBoxStyle}" />
+                                                        <CheckBox x:Name="CleanupWindowsTempCheckBox" Content="系统临时文件" IsChecked="True" Style="{StaticResource PremiumCheckBoxStyle}" />
+                                                        <CheckBox x:Name="CleanupRecycleBinCheckBox" Content="回收站" IsChecked="False" Style="{StaticResource PremiumCheckBoxStyle}" />
+                                                    </WrapPanel>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Button Grid.Column="0" Content="扫描垃圾" Style="{StaticResource PremiumPrimaryButtonStyle}" Margin="0,6,12,0" Click="ScanCleanup_Click" />
+                                                        <Button Grid.Column="1" Content="清理选中项" Style="{StaticResource PremiumButtonStyle}" Margin="12,6,0,0" Click="RunCleanup_Click" />
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        <Border Grid.Column="1" Style="{StaticResource HudPanelStyle}" Margin="0,0,0,18">
+                                            <StackPanel>
+                                                <TextBlock Text="清理状态" Style="{StaticResource PremiumSectionTitleStyle}" />
+                                                <TextBlock x:Name="CleanupSummaryText"
+                                                           Text="请先扫描垃圾"
+                                                           Foreground="{StaticResource PremiumTextBrush}"
+                                                           FontSize="18"
+                                                           FontWeight="SemiBold"
+                                                           TextWrapping="Wrap"
+                                                           Margin="0,18,0,0" />
+                                                <TextBlock Text="扫描完成后将在下方显示可清理项目" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" TextWrapping="Wrap" Margin="0,12,0,0" />
+                                                <ProgressBar x:Name="CleanupActivityBar"
+                                                             Style="{StaticResource TacticalActivityBarStyle}"
+                                                             IsIndeterminate="True"
+                                                             Visibility="Collapsed"
+                                                             Margin="0,28,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+
+                                    <Border Grid.Row="2" Style="{StaticResource HudPanelStyle}" Margin="0,0,0,0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Text="扫描结果" Style="{StaticResource PremiumSectionTitleStyle}" />
+                                            <ListView x:Name="CleanupListView"
+                                                      Grid.Row="1"
+                                                      Height="320"
+                                                      Style="{StaticResource PremiumListViewStyle}"
+                                                      ItemContainerStyle="{StaticResource PremiumListViewItemStyle}"
+                                                      x:FieldModifier="private">
+                                                <ListView.Tag>HudCleanupResultsTable</ListView.Tag>
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Foreground="{StaticResource PremiumTextBrush}">
+                                                            <Grid>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="Auto" />
+                                                                </Grid.RowDefinitions>
+                                                                <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource PremiumTextBrush}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                                                <TextBlock Grid.Row="1" Text="{Binding DetailText}" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                                            </Grid>
+                                                        </CheckBox>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                        </Grid>
                                     </Border>
                                 </Grid>
-                                <Border Grid.Row="1" Style="{StaticResource PremiumModuleStyle}" Margin="0,0,0,18">
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <TabItem Header="网络">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <Grid Margin="0,24,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="网络" Style="{StaticResource HudPageTitleStyle}" />
+                                        <TextBlock Text="实时监控网络状态，测试网速并分析网络性能" Style="{StaticResource HudPageSubtitleStyle}" />
+                                    </StackPanel>
+
+                                    <Grid Grid.Row="1" Margin="0,22,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.2*" />
+                                            <ColumnDefinition Width="1.2*" />
+                                            <ColumnDefinition Width="0.84*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Style="{StaticResource HudPanelStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="下载速度" Style="{StaticResource PremiumLabelStyle}" />
+                                                <TextBlock x:Name="NetworkDownloadText" Text="--" Foreground="{StaticResource PremiumAccentBrush}" FontSize="48" FontWeight="SemiBold" Margin="0,18,0,0" />
+                                                <TextBlock Text="所有网卡当前接收流量" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" Margin="0,12,0,0" />
+                                                <Polyline Points="0,60 22,52 44,50 68,38 92,44 118,18 146,42 174,34 202,50 232,28 270,54 304,36"
+                                                          Stroke="{StaticResource PremiumAccentBrush}"
+                                                          StrokeThickness="2"
+                                                          Fill="#1829C7E8"
+                                                          Margin="0,20,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Column="1" Style="{StaticResource HudPanelStyle}">
+                                            <StackPanel>
+                                                <TextBlock Text="上传速度" Style="{StaticResource PremiumLabelStyle}" />
+                                                <TextBlock x:Name="NetworkUploadText" Text="--" Foreground="{StaticResource PremiumAccentAltBrush}" FontSize="48" FontWeight="SemiBold" Margin="0,18,0,0" />
+                                                <TextBlock Text="所有网卡当前发送流量" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" Margin="0,12,0,0" />
+                                                <Polyline Points="0,58 24,54 50,44 74,48 98,22 126,40 152,32 180,46 208,28 238,40 270,34 304,48"
+                                                          Stroke="{StaticResource PremiumAccentAltBrush}"
+                                                          StrokeThickness="2"
+                                                          Fill="#187C6DF2"
+                                                          Margin="0,20,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Column="2" Style="{StaticResource HudPanelStyle}" Margin="0,0,0,18">
+                                            <StackPanel>
+                                                <TextBlock Text="网络状态" Style="{StaticResource PremiumSectionTitleStyle}" />
+                                                <Grid Margin="0,8,0,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="当前网络" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" />
+                                                    <TextBlock Grid.Column="1" Text="以太网" Foreground="{StaticResource PremiumTextBrush}" FontSize="13" />
+                                                </Grid>
+                                                <TextBlock Text="● 已连接" Foreground="{StaticResource PremiumOkBrush}" FontSize="13" HorizontalAlignment="Right" Margin="0,8,0,18" />
+                                                <TextBlock Text="连接时长     02:13:48" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" Margin="0,0,0,10" />
+                                                <TextBlock Text="IP 地址      192.168.1.104" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" Margin="0,0,0,10" />
+                                                <TextBlock Text="DNS 服务器   114.114.114.114 / 8.8.8.8" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" TextWrapping="Wrap" />
+                                                <Button Content="网络诊断" Style="{StaticResource PremiumButtonStyle}" Margin="0,26,0,0" Click="RunNetworkReport_Click" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+
+                                    <Border Grid.Row="2" Style="{StaticResource HudPanelStyle}" Margin="0,0,0,18">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Grid Width="42" Height="42" Margin="0,0,16,0">
+                                                    <Ellipse Stroke="{StaticResource PremiumAccentBrush}" StrokeThickness="2" />
+                                                    <Path Data="M10,29 A12,12 0 0 1 32,29" Stroke="{StaticResource PremiumAccentBrush}" StrokeThickness="2" />
+                                                </Grid>
+                                                <StackPanel>
+                                                    <TextBlock Text="Speed Test" Style="{StaticResource PremiumSectionTitleStyle}" Margin="0,0,0,4" />
+                                                    <TextBlock x:Name="SpeedTestStatusText"
+                                                               Text="测试您的网络速度，了解真实的网络性能"
+                                                               Foreground="{StaticResource PremiumTextMutedBrush}"
+                                                               FontSize="13"
+                                                               TextWrapping="Wrap" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <Button x:Name="RunSpeedTestButton"
+                                                    Grid.Column="1"
+                                                    Content="开始测速"
+                                                    Style="{StaticResource PremiumPrimaryButtonStyle}"
+                                                    Width="190"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Top"
+                                                    Click="RunSpeedTest_Click" />
+
+                                            <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="0,22,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*" />
+                                                    <ColumnDefinition Width="220" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Border Style="{StaticResource HudPanelStyle}" Margin="0,0,20,0">
+                                                    <StackPanel>
+                                                        <TextBlock Text="下载测速结果" Style="{StaticResource PremiumLabelStyle}" />
+                                                        <TextBlock x:Name="SpeedTestDownloadText" Text="-- Mbps" Foreground="{StaticResource PremiumAccentBrush}" FontSize="42" FontWeight="SemiBold" Margin="0,18,0,0" />
+                                                        <TextBlock Text="--" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" Margin="0,12,0,0" />
+                                                    </StackPanel>
+                                                </Border>
+                                                <Grid x:Name="HudSpeedTestGauge" Grid.Column="1" Width="172" Height="172" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <Ellipse Stroke="#243A4E63" StrokeThickness="12" />
+                                                    <Ellipse Stroke="{StaticResource PremiumAccentBrush}" StrokeThickness="5" StrokeDashArray="7 4" />
+                                                    <Ellipse Stroke="{StaticResource PremiumAccentAltBrush}" StrokeThickness="5" StrokeDashArray="3 5" Margin="22" />
+                                                    <Path Data="M58,88 A30,30 0 1 1 114,88 A30,30 0 1 1 58,88" Stroke="#6635D8FF" StrokeThickness="2" />
+                                                    <Path Data="M86,58 V118 M56,88 H116 M66,68 C78,78 94,78 106,68 M66,108 C78,98 94,98 106,108" Stroke="#6635D8FF" StrokeThickness="2" />
+                                                    <ProgressBar x:Name="SpeedTestActivityBar"
+                                                                 Style="{StaticResource TacticalActivityBarStyle}"
+                                                                 IsIndeterminate="True"
+                                                                 Visibility="Collapsed"
+                                                                 Width="126"
+                                                                 VerticalAlignment="Bottom"
+                                                                 Margin="0,0,0,18" />
+                                                </Grid>
+                                                <Border Grid.Column="2" Style="{StaticResource HudPanelStyle}" Margin="20,0,0,0">
+                                                    <StackPanel>
+                                                        <TextBlock Text="上传测速结果" Style="{StaticResource PremiumLabelStyle}" />
+                                                        <TextBlock x:Name="SpeedTestUploadText" Text="-- Mbps" Foreground="{StaticResource PremiumAccentAltBrush}" FontSize="42" FontWeight="SemiBold" Margin="0,18,0,0" />
+                                                        <TextBlock Text="--" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" Margin="0,12,0,0" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+
+                                    <Border Grid.Row="3" Style="{StaticResource HudPanelStyle}" Margin="0,0,0,0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="网络说明" Style="{StaticResource PremiumSectionTitleStyle}" />
+                                                <TextBlock Text="这里显示的是当前实时网络流量，不是宽带最大测速。下载表示电脑每秒接收的数据量，上传表示电脑每秒发送的数据量。Speed Test 测速结果受网络环境、服务器位置等因素影响，仅供参考。"
+                                                           Foreground="{StaticResource PremiumTextMutedBrush}"
+                                                           FontSize="13"
+                                                           TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <Button Grid.Column="1" Content="生成网络报告" Style="{StaticResource PremiumPrimaryButtonStyle}" Width="190" HorizontalAlignment="Right" VerticalAlignment="Center" Click="RunNetworkReport_Click" />
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <TabItem Header="进程">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <Grid Margin="0,24,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
                                     <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-
                                         <StackPanel>
-                                            <TextBlock Text="Speed Test" Style="{StaticResource PremiumSectionTitleStyle}" />
-                                            <TextBlock x:Name="SpeedTestStatusText"
-                                                       Text="未测速"
-                                                       Foreground="{StaticResource PremiumTextMutedBrush}"
-                                                       FontSize="12"
-                                                       TextWrapping="Wrap"
-                                                       Margin="0,6,0,0" />
+                                            <TextBlock Text="进程占用排行" Style="{StaticResource HudPageTitleStyle}" />
+                                            <TextBlock Text="实时监控系统进程资源占用情况" Style="{StaticResource HudPageSubtitleStyle}" />
                                         </StackPanel>
-                                        <Button x:Name="RunSpeedTestButton"
-                                                Grid.Column="1"
-                                                Content="开始测速"
-                                                Style="{StaticResource PremiumPrimaryButtonStyle}"
-                                                Width="148"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Top"
-                                                Click="RunSpeedTest_Click" />
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Border Width="320" Height="42" Background="#66101820" BorderBrush="#2D3A4E63" BorderThickness="1" CornerRadius="4" Padding="14,0" Margin="0,0,14,0">
+                                                <TextBlock Text="搜索进程名称" Foreground="{StaticResource PremiumTextWeakBrush}" VerticalAlignment="Center" FontSize="13" />
+                                            </Border>
+                                            <Button Content="刷新" Width="96" Style="{StaticResource PremiumButtonStyle}" Margin="0" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Border x:Name="HudProcessTable" Grid.Row="1" Style="{StaticResource HudPanelStyle}" Margin="0,24,0,0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="46" />
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="44" />
+                                            </Grid.RowDefinitions>
+                                            <Grid Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2*" />
+                                                    <ColumnDefinition Width="1*" />
+                                                    <ColumnDefinition Width="1*" />
+                                                    <ColumnDefinition Width="1*" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="进程名称" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="状态" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="2" Text="内存" Foreground="{StaticResource PremiumTextBrush}" FontSize="13" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="3" Text="CPU" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="4" Text="占用详情" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" VerticalAlignment="Center" />
+                                            </Grid>
+                                            <Border Grid.Row="1" Background="#66101820" BorderBrush="#263A4E63" BorderThickness="1" Padding="18">
+                                                <TextBlock x:Name="ProcessRankingText"
+                                                           Text="正在读取..."
+                                                           Foreground="{StaticResource PremiumTextBrush}"
+                                                           FontSize="15"
+                                                           FontFamily="Consolas"
+                                                           LineHeight="33"
+                                                           TextWrapping="Wrap" />
+                                            </Border>
+                                            <Grid Grid.Row="2">
+                                                <TextBlock Text="只查看占用排行，不结束进程。" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="13" VerticalAlignment="Bottom" />
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </ScrollViewer>
+                        </TabItem>
 
-                                        <ProgressBar x:Name="SpeedTestActivityBar"
-                                                     Grid.Row="1"
-                                                     Grid.ColumnSpan="2"
-                                                     Style="{StaticResource TacticalActivityBarStyle}"
-                                                     IsIndeterminate="True"
-                                                     Visibility="Collapsed"
-                                                     Margin="0,16,0,0" />
+                        <TabItem Header="报告">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <Grid Margin="0,24,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="报告与工具" Style="{StaticResource HudPageTitleStyle}" />
+                                        <TextBlock Text="生成本机状态、网络诊断和文件夹占用报告，报告目录可直接打开。" Style="{StaticResource HudPageSubtitleStyle}" />
+                                    </StackPanel>
 
-                                        <UniformGrid Grid.Row="2" Grid.ColumnSpan="2" Columns="2" Margin="0,18,0,0">
-                                            <Border Background="#78101820" BorderBrush="{StaticResource PremiumLineBrush}" BorderThickness="1" Padding="16" Margin="0,0,8,0">
+                                    <Border Grid.Row="1" Style="{StaticResource HudPanelStyle}" Margin="0,24,0,18">
+                                        <Grid x:Name="HudReportActionGrid">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <UniformGrid Columns="2">
+                                                <Button Content="生成电脑体检报告     →" Style="{StaticResource PremiumPrimaryButtonStyle}" Height="92" Margin="0,0,12,24" Click="RunPcReport_Click" />
+                                                <Button Content="生成网络报告     →" Style="{StaticResource PremiumButtonStyle}" Height="92" Margin="12,0,0,24" Click="RunNetworkReport_Click" />
+                                                <Button Content="扫描 D:\ 文件夹占用     →" Style="{StaticResource PremiumButtonStyle}" Height="92" Margin="0,0,12,24" Click="RunFolderRadar_Click" />
+                                                <Button Content="打开报告目录     →" Style="{StaticResource PremiumButtonStyle}" Height="92" Margin="12,0,0,24" Click="OpenReports_Click" />
+                                            </UniformGrid>
+                                            <Button Grid.Row="2"
+                                                    Content="退出程序     →"
+                                                    Height="86"
+                                                    Style="{StaticResource PremiumButtonStyle}"
+                                                    Background="{StaticResource HudDangerSurfaceBrush}"
+                                                    BorderBrush="{StaticResource PremiumDangerBrush}"
+                                                    Click="Exit_Click" />
+                                        </Grid>
+                                    </Border>
+
+                                    <Border Grid.Row="2" Style="{StaticResource HudPanelStyle}" Margin="0,0,0,0">
+                                        <UniformGrid Columns="4">
+                                            <Border Style="{StaticResource HudTinyInfoCardStyle}">
                                                 <StackPanel>
-                                                    <TextBlock Text="测速下载" Style="{StaticResource PremiumLabelStyle}" />
-                                                    <TextBlock x:Name="SpeedTestDownloadText"
-                                                               Text="-- Mbps"
-                                                               Foreground="{StaticResource PremiumAccentBrush}"
-                                                               FontSize="26"
-                                                               FontWeight="SemiBold"
-                                                               Margin="0,8,0,0" />
+                                                    <TextBlock Text="隐私安全" Foreground="{StaticResource PremiumAccentBrush}" FontSize="16" FontWeight="SemiBold" />
+                                                    <TextBlock Text="报告均在本机生成，不上传个人数据" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,10,0,0" />
                                                 </StackPanel>
                                             </Border>
-                                            <Border Background="#78101820" BorderBrush="{StaticResource PremiumLineBrush}" BorderThickness="1" Padding="16" Margin="8,0,0,0">
+                                            <Border Style="{StaticResource HudTinyInfoCardStyle}">
                                                 <StackPanel>
-                                                    <TextBlock Text="测速上传" Style="{StaticResource PremiumLabelStyle}" />
-                                                    <TextBlock x:Name="SpeedTestUploadText"
-                                                               Text="-- Mbps"
-                                                               Foreground="{StaticResource PremiumAccentAltBrush}"
-                                                               FontSize="26"
-                                                               FontWeight="SemiBold"
-                                                               Margin="0,8,0,0" />
+                                                    <TextBlock Text="详细全面" Foreground="{StaticResource PremiumAccentBrush}" FontSize="16" FontWeight="SemiBold" />
+                                                    <TextBlock Text="覆盖系统、网络、存储等多维度分析" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,10,0,0" />
+                                                </StackPanel>
+                                            </Border>
+                                            <Border Style="{StaticResource HudTinyInfoCardStyle}">
+                                                <StackPanel>
+                                                    <TextBlock Text="历史留存" Foreground="{StaticResource PremiumAccentBrush}" FontSize="16" FontWeight="SemiBold" />
+                                                    <TextBlock Text="报告自动保存，可随时查看历史记录" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,10,0,0" />
+                                                </StackPanel>
+                                            </Border>
+                                            <Border Style="{StaticResource HudTinyInfoCardStyle}" Margin="0">
+                                                <StackPanel>
+                                                    <TextBlock Text="便捷分享" Foreground="{StaticResource PremiumAccentBrush}" FontSize="16" FontWeight="SemiBold" />
+                                                    <TextBlock Text="支持导出报告，方便共享分析结果" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,10,0,0" />
                                                 </StackPanel>
                                             </Border>
                                         </UniformGrid>
-                                    </Grid>
-                                </Border>
-
-                                <Border Grid.Row="2" Style="{StaticResource PremiumModuleStyle}">
-                                    <StackPanel>
-                                        <TextBlock Text="网络说明" Style="{StaticResource PremiumSectionTitleStyle}" />
-                                        <TextBlock Text="这里显示的是当前实时网络流量，不是宽带最大测速。下载表示电脑每秒接收的数据量，上传表示电脑每秒发送的数据量。"
-                                                   Foreground="{StaticResource PremiumTextMutedBrush}"
-                                                   FontSize="13"
-                                                   TextWrapping="Wrap" />
-                                        <Button Content="生成网络报告" Style="{StaticResource PremiumPrimaryButtonStyle}" Width="180" HorizontalAlignment="Left" Click="RunNetworkReport_Click" />
-                                    </StackPanel>
-                                </Border>
-                            </Grid>
-                        </ScrollViewer>
-                    </TabItem>
-
-                    <TabItem Header="进程">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                            <Border Style="{StaticResource PremiumModuleStyle}" Margin="0,2,20,0">
-                                <StackPanel>
-                                    <TextBlock Text="进程占用排行" Style="{StaticResource PremiumSectionTitleStyle}" />
-                                    <TextBlock Text="只查看占用排行，不结束进程。" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="12" Margin="0,0,0,12" />
-                                    <Border Background="#78101820" BorderBrush="{StaticResource PremiumLineBrush}" BorderThickness="1" Padding="16">
-                                        <TextBlock x:Name="ProcessRankingText"
-                                                   Text="正在读取..."
-                                                   Foreground="{StaticResource PremiumTextBrush}"
-                                                   FontSize="13"
-                                                   FontFamily="Consolas"
-                                                   TextWrapping="Wrap" />
                                     </Border>
-                                </StackPanel>
-                            </Border>
-                        </ScrollViewer>
-                    </TabItem>
+                                </Grid>
+                            </ScrollViewer>
+                        </TabItem>
+                    </TabControl>
 
-                    <TabItem Header="报告">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                            <Border Style="{StaticResource PremiumModuleStyle}" Margin="0,2,20,0">
-                                <StackPanel>
-                                    <TextBlock Text="报告与工具" Style="{StaticResource PremiumSectionTitleStyle}" />
-                                    <TextBlock Text="生成本机状态、网络诊断和文件夹占用报告。报告目录可直接打开。"
-                                               Foreground="{StaticResource PremiumTextMutedBrush}"
-                                               FontSize="13"
-                                               TextWrapping="Wrap"
-                                               Margin="0,0,0,16" />
-                                    <UniformGrid Columns="2">
-                                        <Button Content="生成电脑体检报告" Style="{StaticResource PremiumPrimaryButtonStyle}" Margin="0,0,8,10" Click="RunPcReport_Click" />
-                                        <Button Content="生成网络报告" Style="{StaticResource PremiumButtonStyle}" Margin="8,0,0,10" Click="RunNetworkReport_Click" />
-                                        <Button Content="扫描 D:\ 文件夹占用" Style="{StaticResource PremiumButtonStyle}" Margin="0,0,8,10" Click="RunFolderRadar_Click" />
-                                        <Button Content="打开报告目录" Style="{StaticResource PremiumButtonStyle}" Margin="8,0,0,10" Click="OpenReports_Click" />
-                                    </UniformGrid>
-                                    <Button Content="退出程序" Style="{StaticResource PremiumButtonStyle}" Background="#251C2027" BorderBrush="{StaticResource PremiumDangerBrush}" Click="Exit_Click" />
-                                </StackPanel>
-                            </Border>
-                        </ScrollViewer>
-                    </TabItem>
-                </TabControl>
-
-                <Border Grid.Row="2"
-                        Background="#AA0B1017"
-                        BorderBrush="{StaticResource PremiumLineBrush}"
-                        BorderThickness="0,1,0,0"
-                        CornerRadius="0,0,8,8">
-                    <Grid Margin="24,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="CPU" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" />
-                            <TextBlock Text="{Binding Text, ElementName=CpuText}" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="12" Margin="8,0,18,0" />
-                            <TextBlock Text="内存" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" />
-                            <TextBlock Text="{Binding Text, ElementName=MemoryText}" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="12" Margin="8,0,18,0" />
-                            <TextBlock Text="磁盘" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="12" />
-                            <TextBlock Text="{Binding Text, ElementName=DiskText}" Foreground="{StaticResource PremiumTextMutedBrush}" FontSize="12" Margin="8,0,18,0" />
-                        </StackPanel>
-                        <TextBlock Grid.Column="1"
-                                   Text="v2.1.0"
-                                   Foreground="{StaticResource PremiumTextWeakBrush}"
-                                   FontSize="12"
-                                   VerticalAlignment="Center" />
-                    </Grid>
-                </Border>
+                    <Border x:Name="HudBottomTelemetryBar"
+                            Grid.Row="2"
+                            Margin="36,8,28,22"
+                            Background="#98101820"
+                            BorderBrush="#3329C7E8"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="28,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,28,0">
+                                <TextBlock Text="CPU" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="13" />
+                                <TextBlock Text="{Binding Text, ElementName=CpuText}" Foreground="{StaticResource PremiumTextBrush}" FontSize="13" Margin="8,0,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,28,0">
+                                <TextBlock Text="内存" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="13" />
+                                <TextBlock Text="{Binding Text, ElementName=MemoryText}" Foreground="{StaticResource PremiumTextBrush}" FontSize="13" Margin="8,0,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,28,0">
+                                <TextBlock Text="磁盘" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="13" />
+                                <TextBlock Text="{Binding Text, ElementName=DiskText}" Foreground="{StaticResource PremiumTextBrush}" FontSize="13" Margin="8,0,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,28,0">
+                                <TextBlock Text="下载" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="13" />
+                                <TextBlock Text="{Binding Text, ElementName=DownloadText}" Foreground="{StaticResource PremiumAccentBrush}" FontSize="13" Margin="8,0,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="上传" Foreground="{StaticResource PremiumTextWeakBrush}" FontSize="13" />
+                                <TextBlock Text="{Binding Text, ElementName=UploadText}" Foreground="{StaticResource PremiumAccentAltBrush}" FontSize="13" Margin="8,0,0,0" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="6"
+                                       Text="v2.2.0"
+                                       Foreground="{StaticResource PremiumTextWeakBrush}"
+                                       FontSize="12"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

@@ -38,6 +38,34 @@
         <GradientStop Color="#F00D141D" Offset="1" />
     </LinearGradientBrush>
 
+    <LinearGradientBrush x:Key="HudCommandShellBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F4040810" Offset="0" />
+        <GradientStop Color="#F5081422" Offset="0.42" />
+        <GradientStop Color="#F2050A12" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="HudSurfaceBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#E90B1828" Offset="0" />
+        <GradientStop Color="#D80A1322" Offset="0.58" />
+        <GradientStop Color="#C806101C" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="HudDangerSurfaceBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#561A1018" Offset="0" />
+        <GradientStop Color="#6E21101A" Offset="0.74" />
+        <GradientStop Color="#3B0B0E15" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="HudCyanSurfaceBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#3312DFF5" Offset="0" />
+        <GradientStop Color="#1A0B79FF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="HudPurpleSurfaceBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#25115DFF" Offset="0" />
+        <GradientStop Color="#401A0D2E" Offset="1" />
+    </LinearGradientBrush>
+
     <LinearGradientBrush x:Key="PremiumModuleBrush" StartPoint="0,0" EndPoint="1,1">
         <GradientStop Color="#EA1A2430" Offset="0" />
         <GradientStop Color="#DE121A23" Offset="0.68" />
@@ -97,6 +125,27 @@
         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
     </Style>
 
+    <Style x:Key="HudPageTitleStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource PremiumTextBrush}" />
+        <Setter Property="FontSize" Value="27" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+    <Style x:Key="HudPageSubtitleStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource PremiumTextMutedBrush}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style x:Key="HudBigValueStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource PremiumTextBrush}" />
+        <Setter Property="FontSize" Value="40" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Margin" Value="0,10,0,0" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+
     <Style x:Key="PremiumStatusPillStyle" TargetType="Border">
         <Setter Property="Height" Value="25" />
         <Setter Property="Padding" Value="10,0" />
@@ -114,6 +163,59 @@
         <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Padding" Value="20" />
         <Setter Property="Margin" Value="0,0,0,18" />
+    </Style>
+
+    <Style x:Key="HudPanelStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource HudSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="#3A1A73B9" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="22" />
+        <Setter Property="Margin" Value="0,0,18,18" />
+    </Style>
+
+    <Style x:Key="HudMetricCardStyle" TargetType="Border" BasedOn="{StaticResource PremiumMetricCardStyle}">
+        <Setter Property="MinHeight" Value="184" />
+        <Setter Property="Padding" Value="18" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderBrush" Value="#42307AB5" />
+        <Setter Property="Background" Value="{StaticResource HudSurfaceBrush}" />
+    </Style>
+
+    <Style x:Key="HudActionCardStyle" TargetType="Border">
+        <Setter Property="MinHeight" Value="104" />
+        <Setter Property="Padding" Value="28,22" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Background" Value="{StaticResource HudCyanSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource PremiumAccentBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Margin" Value="0,0,22,22" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TranslateTransform Y="0" />
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="#FF35E8FF" />
+                <Setter Property="Background" Value="#4612DFF5" />
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <TranslateTransform Y="-1" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="HudTinyInfoCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="#71101A2A" />
+        <Setter Property="BorderBrush" Value="#3329C7E8" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Margin" Value="0,0,16,0" />
     </Style>
 
     <Style x:Key="PremiumMetricCardStyle" TargetType="Border">
@@ -304,9 +406,9 @@
     <Style TargetType="ScrollBar" BasedOn="{StaticResource PremiumScrollbarStyle}" />
 
     <Style x:Key="PremiumFloatingBallStyle" TargetType="Border">
-        <Setter Property="Width" Value="118" />
-        <Setter Property="Height" Value="118" />
-        <Setter Property="CornerRadius" Value="59" />
+        <Setter Property="Width" Value="154" />
+        <Setter Property="Height" Value="154" />
+        <Setter Property="CornerRadius" Value="77" />
         <Setter Property="Background" Value="{StaticResource PremiumBallBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource PremiumAccentBrush}" />
         <Setter Property="BorderThickness" Value="1.5" />
@@ -322,20 +424,59 @@
                 <ControlTemplate TargetType="TabControl">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="132" />
+                            <ColumnDefinition Width="150" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Border Grid.Column="0"
+                        <Border x:Name="HudSideRail"
+                                Grid.Column="0"
                                 Background="#A80B1118"
-                                BorderBrush="{StaticResource PremiumLineBrush}"
+                                BorderBrush="#4429C7E8"
                                 BorderThickness="0,0,1,0"
-                                Padding="14">
-                            <TabPanel x:Name="HeaderPanel"
-                                      IsItemsHost="True"
-                                      KeyboardNavigation.TabIndex="1" />
+                                Padding="16,18">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="108" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="92" />
+                                </Grid.RowDefinitions>
+                                <Viewbox x:Name="BrandLogoMark"
+                                         Width="74"
+                                         Height="74"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Top"
+                                         Margin="14,0,0,0">
+                                    <Grid Width="96" Height="96">
+                                        <Path Data="M62,6 L20,49 H44 L25,90 L78,37 H52 Z"
+                                              Fill="#FF16D8FF"
+                                              Opacity="0.95" />
+                                        <Path Data="M70,16 L37,48 H62 L34,88 L86,32 H61 Z"
+                                              Fill="#FF8357FF"
+                                              Opacity="0.92" />
+                                        <Path Data="M34,12 L12,52 H36 L26,70 L58,34 H39 Z"
+                                              Fill="#FF0A8FFF"
+                                              Opacity="0.78" />
+                                    </Grid>
+                                </Viewbox>
+                                <TabPanel x:Name="HeaderPanel"
+                                          Grid.Row="1"
+                                          IsItemsHost="True"
+                                          KeyboardNavigation.TabIndex="1" />
+                                <Border Grid.Row="2"
+                                        Padding="12"
+                                        BorderBrush="#2029C7E8"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        VerticalAlignment="Bottom">
+                                    <TextBlock Text="设置"
+                                               Foreground="{StaticResource PremiumTextMutedBrush}"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
                         </Border>
                         <ContentPresenter Grid.Column="1"
-                                          Margin="22,0,0,0"
+                                          Margin="32,0,0,0"
                                           ContentSource="SelectedContent" />
                     </Grid>
                 </ControlTemplate>
@@ -344,6 +485,70 @@
     </Style>
 
     <Style x:Key="CyberTabControlStyle" TargetType="TabControl" BasedOn="{StaticResource PremiumNavigationTabControlStyle}" />
+
+    <Style x:Key="HudNavTabItemStyle" TargetType="TabItem">
+        <Setter Property="Foreground" Value="{StaticResource PremiumTextMutedBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Padding" Value="16,18" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Border x:Name="NavSurface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="8" />
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="TabSelectionRail"
+                                    Width="3"
+                                    HorizontalAlignment="Left"
+                                    Background="{StaticResource PremiumAccentBrush}"
+                                    Opacity="0" />
+                            <UniformGrid Grid.Column="0" Columns="2" Rows="2" Width="18" Height="18" VerticalAlignment="Center">
+                                <Border BorderBrush="{TemplateBinding Foreground}" BorderThickness="1.5" CornerRadius="1" Margin="1" />
+                                <Border BorderBrush="{TemplateBinding Foreground}" BorderThickness="1.5" CornerRadius="1" Margin="1" />
+                                <Border BorderBrush="{TemplateBinding Foreground}" BorderThickness="1.5" CornerRadius="1" Margin="1" />
+                                <Border BorderBrush="{TemplateBinding Foreground}" BorderThickness="1.5" CornerRadius="1" Margin="1" />
+                            </UniformGrid>
+                            <ContentPresenter Grid.Column="1"
+                                              ContentSource="Header"
+                                              Margin="16,0,0,0"
+                                              VerticalAlignment="Center" />
+                            <Path x:Name="NavPointer"
+                                  Grid.Column="2"
+                                  Data="M0,0 L8,7 L0,14 Z"
+                                  Fill="{StaticResource PremiumAccentBrush}"
+                                  Opacity="0"
+                                  VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource PremiumTextBrush}" />
+                            <Setter TargetName="NavSurface" Property="Background" Value="#25107CFF" />
+                            <Setter TargetName="NavSurface" Property="BorderBrush" Value="#6635D8FF" />
+                            <Setter TargetName="TabSelectionRail" Property="Opacity" Value="1" />
+                            <Setter TargetName="NavPointer" Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="NavSurface" Property="BorderBrush" Value="#4429C7E8" />
+                            <Setter TargetName="NavSurface" Property="Background" Value="#1613B4FF" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style x:Key="PremiumNavigationTabItemStyle" TargetType="TabItem">
         <Setter Property="Foreground" Value="{StaticResource PremiumTextMutedBrush}" />
