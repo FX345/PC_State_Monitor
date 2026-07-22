@@ -29,6 +29,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer refreshTimer = new();
     private readonly WinFormsNotifyIcon trayIcon;
     private readonly string scriptsRoot;
+    private readonly string reportsRoot;
     private Point dragStartScreen;
     private double dragStartLeft;
     private double dragStartTop;
@@ -45,6 +46,7 @@ public partial class MainWindow : Window
         CleanupListView.ItemsSource = cleanupItems;
         trayIcon = CreateTrayIcon();
         scriptsRoot = FindScriptsRoot();
+        reportsRoot = FindReportsRoot(scriptsRoot);
         Loaded += MainWindow_Loaded;
         Closed += (_, _) => DisposeTrayIcon();
 
@@ -422,7 +424,7 @@ public partial class MainWindow : Window
 
     private void OpenReports_Click(object sender, RoutedEventArgs e)
     {
-        var reportDir = Path.Combine(scriptsRoot, "ScriptReports");
+        var reportDir = Path.Combine(reportsRoot, "ScriptReports");
         Directory.CreateDirectory(reportDir);
 
         Process.Start(new ProcessStartInfo
@@ -812,6 +814,14 @@ public partial class MainWindow : Window
                 return current.FullName;
             }
 
+            var toolsScriptsDirectory = Path.Combine(current.FullName, "tools", "scripts");
+            if (File.Exists(Path.Combine(toolsScriptsDirectory, "pc_report.ps1")) &&
+                File.Exists(Path.Combine(toolsScriptsDirectory, "network_report.ps1")) &&
+                File.Exists(Path.Combine(toolsScriptsDirectory, "folder_radar.ps1")))
+            {
+                return toolsScriptsDirectory;
+            }
+
             var scriptsDirectory = Path.Combine(current.FullName, "scripts");
             if (File.Exists(Path.Combine(scriptsDirectory, "pc_report.ps1")) &&
                 File.Exists(Path.Combine(scriptsDirectory, "network_report.ps1")) &&
@@ -824,6 +834,22 @@ public partial class MainWindow : Window
         }
 
         return Directory.GetCurrentDirectory();
+    }
+
+    private static string FindReportsRoot(string scriptsDirectory)
+    {
+        var scriptInfo = new DirectoryInfo(scriptsDirectory);
+        var toolsInfo = scriptInfo.Parent;
+        var installInfo = toolsInfo?.Parent;
+
+        if (string.Equals(scriptInfo.Name, "scripts", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(toolsInfo?.Name, "tools", StringComparison.OrdinalIgnoreCase) &&
+            installInfo is not null)
+        {
+            return installInfo.FullName;
+        }
+
+        return scriptsDirectory;
     }
 
     private sealed class CleanupTargetViewModel

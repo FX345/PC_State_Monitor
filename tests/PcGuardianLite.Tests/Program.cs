@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using PcGuardianLite.Core;
 
 var tests = new List<(string Name, Action Run)>
@@ -39,6 +39,7 @@ var tests = new List<(string Name, Action Run)>
     ("Installer planner uses local app data", TestInstallerPlannerUsesLocalAppData),
     ("Installer planner builds user desktop shortcut path", TestInstallerPlannerBuildsDesktopShortcutPath),
     ("Installer payload manifest requires bundled scripts", TestInstallerPayloadRequiresBundledScripts),
+    ("Installer payload manifest uses organized tool scripts", TestInstallerPayloadUsesOrganizedToolScripts),
     ("Single instance guard blocks second owner", TestSingleInstanceGuardBlocksSecondOwner),
     ("Single instance guard releases ownership on dispose", TestSingleInstanceGuardReleasesOwnership),
     ("Uninstall planner builds uninstall command", TestUninstallPlannerBuildsUninstallCommand),
@@ -53,7 +54,9 @@ var tests = new List<(string Name, Action Run)>
     ("Main window uses tactical anime motion skin", TestMainWindowUsesTacticalAnimeMotionSkin),
     ("Main window uses premium instrument shell", TestMainWindowUsesPremiumInstrumentShell),
     ("Main window exposes network speed test controls", TestMainWindowExposesNetworkSpeedTestControls),
-    ("Main window uses reference HUD command shell", TestMainWindowUsesReferenceHudCommandShell)
+    ("Main window uses reference HUD command shell", TestMainWindowUsesReferenceHudCommandShell),
+    ("Installer uses readable Chinese copy", TestInstallerUsesReadableChineseCopy),
+    ("Repository gives user clear download path", TestRepositoryGivesUserClearDownloadPath)
 };
 
 var failed = 0;
@@ -321,21 +324,30 @@ static void TestInstallerPayloadRequiresBundledScripts()
 
     try
     {
+        var scriptsDirectory = Path.Combine(directory, "tools", "scripts");
+        Directory.CreateDirectory(scriptsDirectory);
         File.WriteAllText(Path.Combine(directory, "PcGuardianLite.exe"), "");
-        File.WriteAllText(Path.Combine(directory, "pc_report.ps1"), "");
-        File.WriteAllText(Path.Combine(directory, "network_report.ps1"), "");
-        File.WriteAllText(Path.Combine(directory, "folder_radar.ps1"), "");
-        File.WriteAllText(Path.Combine(directory, "ai_review_pack.ps1"), "");
-        File.WriteAllText(Path.Combine(directory, "cmd_for_folder_radar.txt"), "");
+        File.WriteAllText(Path.Combine(scriptsDirectory, "pc_report.ps1"), "");
+        File.WriteAllText(Path.Combine(scriptsDirectory, "network_report.ps1"), "");
+        File.WriteAllText(Path.Combine(scriptsDirectory, "folder_radar.ps1"), "");
+        File.WriteAllText(Path.Combine(scriptsDirectory, "ai_review_pack.ps1"), "");
+        File.WriteAllText(Path.Combine(scriptsDirectory, "cmd_for_folder_radar.txt"), "");
 
         AssertEqual(true, InstallerPayloadManifest.HasRequiredFiles(directory));
-        File.Delete(Path.Combine(directory, "network_report.ps1"));
+        File.Delete(Path.Combine(scriptsDirectory, "network_report.ps1"));
         AssertEqual(false, InstallerPayloadManifest.HasRequiredFiles(directory));
     }
     finally
     {
         Directory.Delete(directory, recursive: true);
     }
+}
+
+static void TestInstallerPayloadUsesOrganizedToolScripts()
+{
+    AssertEqual(Path.Combine("tools", "scripts"), InstallerPayloadManifest.ScriptsRelativeDirectory);
+    AssertCollectionContains(Path.Combine("tools", "scripts", "pc_report.ps1"), InstallerPayloadManifest.RequiredRelativePaths);
+    AssertCollectionContains(Path.Combine("tools", "scripts", "network_report.ps1"), InstallerPayloadManifest.RequiredRelativePaths);
 }
 
 static void TestSingleInstanceGuardBlocksSecondOwner()
@@ -537,6 +549,7 @@ static void TestMainWindowUsesTabbedToolLayout()
     AssertContains("Header=\"网络\"", xaml);
     AssertContains("Header=\"进程\"", xaml);
     AssertContains("Header=\"报告\"", xaml);
+    AssertNotContains("姒傝", xaml);
 }
 
 static void TestMainWindowUsesTacticalAnimeMotionSkin()
@@ -609,6 +622,7 @@ static void TestMainWindowUsesReferenceHudCommandShell()
     var code = File.ReadAllText(codePath);
 
     AssertNotContains("电脑管家", xaml);
+    AssertNotContains("鐢佃剳", xaml);
     AssertContains("BrandLogoMark", ui);
     AssertContains("ReferenceHudShellGrid", ui);
     AssertContains("HudSideRail", ui);
@@ -628,6 +642,33 @@ static void TestMainWindowUsesReferenceHudCommandShell()
     AssertContains("HudActionCardStyle", theme);
     AssertContains("HudNavTabItemStyle", theme);
     AssertContains("ExpandedWindowWidth = 1500", code);
+}
+
+static void TestInstallerUsesReadableChineseCopy()
+{
+    var sourceRoot = FindSourceRoot();
+    var setupPath = Path.Combine(sourceRoot, "src", "PcGuardianLite.Setup", "Program.cs");
+    var setup = File.ReadAllText(setupPath);
+
+    AssertContains("PcGuardianLite 安装器", setup);
+    AssertContains("安装 PcGuardianLite", setup);
+    AssertContains("在桌面创建快捷方式", setup);
+    AssertNotContains("瀹夎", setup);
+    AssertNotContains("鏃犳硶", setup);
+}
+
+static void TestRepositoryGivesUserClearDownloadPath()
+{
+    var sourceRoot = FindSourceRoot();
+    var readme = File.ReadAllText(Path.Combine(sourceRoot, "README.md"));
+    var downloadGuidePath = Path.Combine(sourceRoot, "下载使用.md");
+    var buildScript = File.ReadAllText(Path.Combine(sourceRoot, "build_installer.ps1"));
+
+    AssertEqual(true, File.Exists(downloadGuidePath));
+    AssertContains("普通用户", readme);
+    AssertContains("PcGuardianLiteSetup.exe", readme);
+    AssertContains("tools\\scripts", buildScript);
+    AssertNotContains("docs/superpowers", readme);
 }
 
 static string FindSourceRoot()
@@ -673,6 +714,14 @@ static void AssertContains(string expected, string actual)
     if (!actual.Contains(expected, StringComparison.Ordinal))
     {
         throw new UnreachableException($"Expected text to contain '{expected}'.");
+    }
+}
+
+static void AssertCollectionContains(string expected, IEnumerable<string> actual)
+{
+    if (!actual.Contains(expected))
+    {
+        throw new UnreachableException($"Expected collection to contain '{expected}'.");
     }
 }
 

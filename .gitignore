@@ -19,6 +19,7 @@ TestResults/
 installer-output/
 installer-payload/
 publish-single/
+release/
 src/PcGuardianLite.Setup/Payload/payload.zip
 
 # Logs and temporary files

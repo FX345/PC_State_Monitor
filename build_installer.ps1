@@ -3,6 +3,7 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $scriptSourceDirectory = Join-Path $root "scripts"
 $payloadDirectory = Join-Path $root "installer-payload"
+$payloadScriptsDirectory = Join-Path $payloadDirectory "tools\scripts"
 $payloadZip = Join-Path $root "src\PcGuardianLite.Setup\Payload\payload.zip"
 $setupOutput = Join-Path $root "installer-output"
 $appProject = Join-Path $root "src\PcGuardianLite.App\PcGuardianLite.App.csproj"
@@ -42,14 +43,15 @@ foreach ($scriptName in $requiredScripts) {
         throw "Missing required script: $source"
     }
 
-    Copy-Item -LiteralPath $source -Destination $payloadDirectory -Force
+    New-Item -ItemType Directory -Force -Path $payloadScriptsDirectory | Out-Null
+    Copy-Item -LiteralPath $source -Destination $payloadScriptsDirectory -Force
 }
 
-$requiredPayloadFiles = @("PcGuardianLite.exe") + $requiredScripts
-foreach ($fileName in $requiredPayloadFiles) {
-    $filePath = Join-Path $payloadDirectory $fileName
+$requiredPayloadFiles = @("PcGuardianLite.exe") + ($requiredScripts | ForEach-Object { Join-Path "tools\scripts" $_ })
+foreach ($relativePath in $requiredPayloadFiles) {
+    $filePath = Join-Path $payloadDirectory $relativePath
     if (!(Test-Path $filePath)) {
-        throw "Payload is missing required file: $fileName"
+        throw "Payload is missing required file: $relativePath"
     }
 }
 

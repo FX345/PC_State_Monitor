@@ -8,9 +8,9 @@ namespace PcGuardianLite.App;
 
 internal static class UninstallRunner
 {
-    private static readonly string[] InstalledFileNames =
+    private static readonly string[] InstalledRelativePaths =
     [
-        .. InstallerPayloadManifest.RequiredFileNames,
+        .. InstallerPayloadManifest.RequiredRelativePaths,
         UninstallPlanner.UninstallShortcutName
     ];
 
@@ -124,16 +124,18 @@ internal static class UninstallRunner
             ":delete_rest"
         };
 
-        foreach (var fileName in InstalledFileNames)
+        foreach (var relativePath in InstalledRelativePaths)
         {
-            if (string.Equals(fileName, UninstallPlanner.AppExecutableName, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(relativePath, UninstallPlanner.AppExecutableName, StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
 
-            lines.Add($"del /f /q {QuoteForCmd(Path.Combine(installDirectory, fileName))} >nul 2>nul");
+            lines.Add($"del /f /q {QuoteForCmd(Path.Combine(installDirectory, relativePath))} >nul 2>nul");
         }
 
+        lines.Add($"rmdir {QuoteForCmd(Path.Combine(installDirectory, "tools", "scripts"))} >nul 2>nul");
+        lines.Add($"rmdir {QuoteForCmd(Path.Combine(installDirectory, "tools"))} >nul 2>nul");
         lines.Add($"rmdir {QuoteForCmd(installDirectory)} >nul 2>nul");
         lines.Add("del /f /q \"%~f0\" >nul 2>nul");
         File.WriteAllLines(cleanupScript, lines);

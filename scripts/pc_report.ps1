@@ -15,7 +15,15 @@ $scriptDir = if ($PSScriptRoot) {
     Split-Path -Parent $MyInvocation.MyCommand.Path
 }
 
-$reportDir = Join-Path $scriptDir "ScriptReports"
+$toolsDir = Split-Path -Parent $scriptDir
+$installRootCandidate = Split-Path -Parent $toolsDir
+$reportBaseDir = if ((Split-Path -Leaf $scriptDir) -ieq "scripts" -and (Split-Path -Leaf $toolsDir) -ieq "tools") {
+    $installRootCandidate
+} else {
+    $scriptDir
+}
+
+$reportDir = Join-Path $reportBaseDir "ScriptReports"
 
 if (!(Test-Path $reportDir)) {
     New-Item -ItemType Directory -Path $reportDir | Out-Null

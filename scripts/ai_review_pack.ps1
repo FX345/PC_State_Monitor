@@ -10,8 +10,16 @@ $scriptDir = if ($PSScriptRoot) {
     Split-Path -Parent $MyInvocation.MyCommand.Path
 }
 
-$reportDir = Join-Path $scriptDir "ScriptReports"
-$aiReportDir = Join-Path $scriptDir "AIReports"
+$toolsDir = Split-Path -Parent $scriptDir
+$installRootCandidate = Split-Path -Parent $toolsDir
+$reportBaseDir = if ((Split-Path -Leaf $scriptDir) -ieq "scripts" -and (Split-Path -Leaf $toolsDir) -ieq "tools") {
+    $installRootCandidate
+} else {
+    $scriptDir
+}
+
+$reportDir = Join-Path $reportBaseDir "ScriptReports"
+$aiReportDir = Join-Path $reportBaseDir "AIReports"
 
 if (!(Test-Path $reportDir)) {
     Write-Host "ScriptReports folder not found."

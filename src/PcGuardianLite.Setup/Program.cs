@@ -30,8 +30,8 @@ internal sealed class InstallerForm : Form
     public InstallerForm()
     {
         Text = "PcGuardianLite 安装器";
-        Width = 500;
-        Height = 310;
+        Width = 540;
+        Height = 340;
         StartPosition = FormStartPosition.CenterScreen;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
@@ -42,36 +42,36 @@ internal sealed class InstallerForm : Form
         var titleLabel = new Label
         {
             Text = "安装 PcGuardianLite",
-            Left = 24,
+            Left = 26,
             Top = 22,
-            Width = 430,
+            Width = 470,
             Height = 30,
             Font = new Font(Font.FontFamily, 14, FontStyle.Bold)
         };
 
         var descriptionLabel = new Label
         {
-            Text = "轻量电脑状态悬浮球，包含主程序和报告脚本。",
-            Left = 24,
+            Text = "轻量电脑状态悬浮球，包含主程序、报告脚本和安全清理工具。",
+            Left = 26,
             Top = 58,
-            Width = 430,
+            Width = 470,
             Height = 24
         };
 
         var pathLabel = new Label
         {
             Text = "安装位置",
-            Left = 24,
+            Left = 26,
             Top = 96,
-            Width = 430,
+            Width = 470,
             Height = 20
         };
 
         _installPathTextBox = new TextBox
         {
-            Left = 24,
+            Left = 26,
             Top = 120,
-            Width = 430,
+            Width = 470,
             Height = 26,
             ReadOnly = true,
             Text = installPath
@@ -79,9 +79,9 @@ internal sealed class InstallerForm : Form
 
         _desktopShortcutCheckBox = new CheckBox
         {
-            Left = 24,
-            Top = 158,
-            Width = 430,
+            Left = 26,
+            Top = 160,
+            Width = 470,
             Height = 24,
             Text = "在桌面创建快捷方式",
             Checked = true
@@ -89,38 +89,38 @@ internal sealed class InstallerForm : Form
 
         _launchAfterInstallCheckBox = new CheckBox
         {
-            Left = 24,
-            Top = 186,
-            Width = 430,
+            Left = 26,
+            Top = 188,
+            Width = 470,
             Height = 24,
-            Text = "安装完成后启动",
+            Text = "安装完成后立即启动",
             Checked = true
         };
 
         _statusLabel = new Label
         {
-            Left = 24,
-            Top = 220,
-            Width = 430,
+            Left = 26,
+            Top = 224,
+            Width = 470,
             Height = 20,
             Text = "准备安装"
         };
 
         _progressBar = new ProgressBar
         {
-            Left = 24,
-            Top = 244,
-            Width = 300,
+            Left = 26,
+            Top = 250,
+            Width = 330,
             Height = 18,
             Style = ProgressBarStyle.Blocks
         };
 
         _installButton = new Button
         {
-            Left = 342,
-            Top = 236,
-            Width = 112,
-            Height = 32,
+            Left = 374,
+            Top = 240,
+            Width = 122,
+            Height = 36,
             Text = "安装"
         };
         _installButton.Click += InstallButton_Click;
@@ -169,7 +169,7 @@ internal sealed class InstallerForm : Form
             _statusLabel.Text = "安装失败";
             _installButton.Enabled = true;
             MessageBox.Show(
-                $"安装失败：{ex.Message}\n\n如果程序正在运行，请先退出后再安装。",
+                $"安装失败：{ex.Message}\n\n如果程序正在运行，请先从托盘退出后再安装。",
                 "安装失败",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
@@ -265,7 +265,7 @@ internal sealed class InstallerForm : Form
     {
         var registryPath = UninstallPlanner.GetCurrentUserUninstallRegistryPath(UninstallPlanner.AppName);
         using var key = Registry.CurrentUser.CreateSubKey(registryPath)
-            ?? throw new InvalidOperationException("Unable to create uninstall registry entry.");
+            ?? throw new InvalidOperationException("无法创建卸载注册表项。");
 
         var executablePath = Path.Combine(installDirectory, UninstallPlanner.AppExecutableName);
         var uninstallCommand = UninstallPlanner.GetUninstallCommand(installDirectory, UninstallPlanner.AppExecutableName);
